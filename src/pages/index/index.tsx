@@ -1,17 +1,17 @@
 import { FC, useEffect, useState } from 'react';
-import { getAddress } from '../../api/address';
+import Navbar from '../../components/organisms/Navbar';
 
 const Index: FC = () => {
   // const [isReady, setIsReady] = useState(false)
 
-  useEffect(() => {
-    ;(async () => {
-     const { data } = await getAddress();
-     console.log('address', data);
-    })();
-  }, []);
+  // useEffect(() => {
+  //   ;(async () => {
+  //   })();
+  // }, []);
 
-  return <div>test</div>;
+  return <div>
+    <Navbar />
+  </div>;
 };
 
 export default Index;

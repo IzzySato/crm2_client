@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { routers } from './routes';
+import './stylesheets/cssReset.css';
+import './stylesheets/globalCSS.css';
 
 function App() {
   return (
