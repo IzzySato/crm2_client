@@ -12,4 +12,14 @@ export const routers = [
     path: '/login',
     element: Login,
   },
+  {
+    name: 'loginFail',
+    path: '/login_fail',
+    element: Login,
+  },
+  {
+    name: 'page not found',
+    path: '/page_not_found',
+    element: Login,
+  },
 ];

@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from 'react';
-import GoogleAuth from '../../components/organisms/GoogleAuth';
+import GoogleAuthLoginButton from '../../components/atoms/button/GoogleAuthLoginButton';
+import TradeLocalLoginButton from '../../components/atoms/button/TradeLocalLoginButton';
 
 const Login: FC = () => {
   // const [isReady, setIsReady] = useState(false)
@@ -9,10 +10,14 @@ const Login: FC = () => {
   //   })();
   // }, []);
 
-  return <div>
-    <h1>Login</h1>
-    <GoogleAuth />
-  </div>;
+  return (
+    <div className="mt-9 flex justify-center items-center">
+      <div>
+        <TradeLocalLoginButton />
+        <GoogleAuthLoginButton />
+      </div>
+    </div>
+  );
 };
 
 export default Login;
