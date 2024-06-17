@@ -5,16 +5,16 @@ type TablePrps = {
     name: string;
     value: string;
   }[];
-  data: any;
+  data: any
 };
 
-const Table: FC<TablePrps> = ({ columns, data }) => {
+const Table: FC<TablePrps> = ({ columns, data}) => {
   // const [isReady, setIsReady] = useState(false)
 
-  useEffect(() => {
-    // ;(async () => {
-    // })();
-  }, [data]);
+  // useEffect(() => {
+  //   // ;(async () => {
+  //   // })();
+  // }, [data]);
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-6 m-5">

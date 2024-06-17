@@ -9,13 +9,18 @@ type Props = {
       value: string;
     }[];
     data: any;
-  },
+  };
   pagenationProps: {
-    total: number
-  }
+    total: number;
+    current: number;
+    length: number;
+  };
 };
 
-const SearchablePaginatedTable: FC<Props> = ({tablePrpps: {columns, data}, pagenationProps: { total }}) => {
+const SearchablePaginatedTable: FC<Props> = ({
+  tablePrpps: { columns, data },
+  pagenationProps: { total, current, length },
+}) => {
   // const [isReady, setIsReady] = useState(false)
 
   // useEffect(() => {
@@ -25,8 +30,8 @@ const SearchablePaginatedTable: FC<Props> = ({tablePrpps: {columns, data}, pagen
 
   return (
     <>
-      <Table columns={columns} data={data}/>
-      <Pagination total={total}/>
+      { data && <Table columns={columns} data={data} />}
+      <Pagination total={total} current={current} length={length} />
     </>
   );
 };

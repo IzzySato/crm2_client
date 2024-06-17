@@ -1,11 +1,13 @@
 import { FC, useEffect, useState } from 'react';
 
 type Props = {
-  total: number;
+  total: number
+  current: number
+  length: number
 };
 
-const Pagination: FC<Props> = ({ total }) => {
-  const [current, setCurrent] = useState(false);
+const Pagination: FC<Props> = ({ total, current, length }) => {
+  // const [current, setCurrent] = useState(false);
 
   // useEffect(() => {
   //   ;(async () => {
@@ -32,11 +34,11 @@ const Pagination: FC<Props> = ({ total }) => {
         <div>
           <p className="text-sm text-gray-700">
             Showing
-            <span className="font-medium">1</span>
+            <span className="font-medium px-2">{ current }</span>
             to
-            <span className="font-medium">10</span>
+            <span className="font-medium px-2">{ current + length }</span>
             of
-            <span className="font-medium">{total}</span>
+            <span className="font-medium px-2">{total}</span>
             results
           </p>
         </div>

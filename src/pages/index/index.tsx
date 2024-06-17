@@ -1,6 +1,5 @@
 import { FC, useEffect, useState } from 'react';
 import Navbar from '../../components/organisms/Navbar';
-import Table from '../../components/atoms/table/table';
 import SearchablePaginatedTable from '../../components/organisms/SearchablePaginatedTable';
 
 const Index: FC = () => {
@@ -34,36 +33,45 @@ const Index: FC = () => {
     },
   ];
 
-  const customerData = [
-    {
-      id: '12331',
-      firstName: 'Alice',
-      lastName: 'Brown',
-      email: 'alice.brown@gmail.com',
-      phone: '123-134-5678',
-    },
-    {
-      id: '12332',
-      firstName: 'Alice',
-      lastName: 'Brown',
-      email: 'alice.brown@gmail.com',
-      phone: '123-134-5678',
-    },
-    {
-      id: '12333',
-      firstName: 'Alice',
-      lastName: 'Brown',
-      email: 'alice.brown@gmail.com',
-      phone: '123-134-5678',
-    },
-  ];
+  const customerData = {
+    total: 12,
+    pageNum: 1,
+    length: 10,
+    data: [
+      {
+        id: '12331',
+        firstName: 'Alice',
+        lastName: 'Brown',
+        email: 'alice.brown@gmail.com',
+        phone: '123-134-5678',
+      },
+      {
+        id: '12332',
+        firstName: 'Alice',
+        lastName: 'Brown',
+        email: 'alice.brown@gmail.com',
+        phone: '123-134-5678',
+      },
+      {
+        id: '12333',
+        firstName: 'Alice',
+        lastName: 'Brown',
+        email: 'alice.brown@gmail.com',
+        phone: '123-134-5678',
+      },
+    ],
+  };
 
   return (
     <div>
       <Navbar />
       <SearchablePaginatedTable
-        tablePrpps={{ columns: customerColumns, data: customerData }}
-        pagenationProps={{ total: 20 }}
+        tablePrpps={{ columns: customerColumns, data: customerData.data }}
+        pagenationProps={{
+          total: customerData.total,
+          current: customerData.pageNum,
+          length: customerData.length,
+        }}
       />
     </div>
   );
