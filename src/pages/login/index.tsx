@@ -3,7 +3,7 @@ import GoogleAuthLoginButton from '../../components/atoms/button/GoogleAuthLogin
 import TradeLocalLoginButton from '../../components/atoms/button/TradeLocalLoginButton';
 
 const Login: FC = () => {
-  // const [isReady, setIsReady] = useState(false)
+  // const [isReady, setIsReady] = useState(false);
 
   // useEffect(() => {
   //   ;(async () => {

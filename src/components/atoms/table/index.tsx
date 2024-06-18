@@ -1,6 +1,6 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 
-type TablePrps = {
+export type TableProps = {
   columns: {
     name: string;
     value: string;
@@ -8,14 +8,7 @@ type TablePrps = {
   data: any
 };
 
-const Table: FC<TablePrps> = ({ columns, data}) => {
-  // const [isReady, setIsReady] = useState(false)
-
-  // useEffect(() => {
-  //   // ;(async () => {
-  //   // })();
-  // }, [data]);
-
+const Table: FC<TableProps> = ({ columns, data}) => {
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-6 m-5">
     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">

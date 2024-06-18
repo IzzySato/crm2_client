@@ -1,36 +1,23 @@
-import { FC, useEffect, useState } from 'react';
-import Table from '../atoms/table/table';
-import Pagination from '../atoms/pagination/pagination';
+import { FC } from 'react';
+import Table, { TableProps } from '../atoms/table';
+import Pagination, { pagenationProps } from '../atoms/pagination/pagination';
+import SearchHeader, { SearchHeaderProps } from './SearchHeader';
 
 type Props = {
-  tablePrpps: {
-    columns: {
-      name: string;
-      value: string;
-    }[];
-    data: any;
-  };
-  pagenationProps: {
-    total: number;
-    current: number;
-    length: number;
-  };
+  searchHeaderProps: SearchHeaderProps;
+  tablePrpps: TableProps;
+  pagenationProps: pagenationProps;
 };
 
 const SearchablePaginatedTable: FC<Props> = ({
+  searchHeaderProps: { buttons, searchProps },
   tablePrpps: { columns, data },
   pagenationProps: { total, current, length },
 }) => {
-  // const [isReady, setIsReady] = useState(false)
-
-  // useEffect(() => {
-  //   ;(async () => {
-  //   })();
-  // }, []);
-
   return (
     <>
-      { data && <Table columns={columns} data={data} />}
+      <SearchHeader buttons={buttons} searchProps={searchProps} />
+      {data && <Table columns={columns} data={data} />}
       <Pagination total={total} current={current} length={length} />
     </>
   );

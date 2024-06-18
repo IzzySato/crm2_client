@@ -1,22 +1,9 @@
-import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { routers } from './routes';
 import './stylesheets/cssReset.css';
 import './stylesheets/globalCSS.css';
-import axios, { AxiosInstance } from 'axios';
 
 function App() {
-  // const [user, setUser] = useState(null);
-
-  // useEffect(() => {
-  //     const fetchUser = async () => {
-  //         const response = await axios.get('http://localhost:5000/user', { withCredentials: true });
-  //         setUser(response.data);
-  //     };
-
-  //     fetchUser();
-  // }, []);
-
   return (
     <BrowserRouter>
       <Routes>

@@ -1,14 +1,43 @@
 import { FC, useEffect, useState } from 'react';
 import Navbar from '../../components/organisms/Navbar';
 import SearchablePaginatedTable from '../../components/organisms/SearchablePaginatedTable';
+import { addCustomer, getCustomers } from '../../api/customer';
+import TableAction from '../../components/molecules/tableAction';
+import GeneralModal from '../../components/molecules/modal';
+import CustomerInputs from '../../components/organisms/customer/CustomerInputs';
 
 const Index: FC = () => {
-  // const [isReady, setIsReady] = useState(false)
+  const [customerData, setCustomerData] = useState({
+    total: 0,
+    pageNum: 1,
+    length: 10,
+    data: [],
+  });
 
-  // useEffect(() => {
-  //   ;(async () => {
-  //   })();
-  // }, []);
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [customer, setCustomer] = useState({});
+  const [address, setAddress] = useState({});
+
+  const createCustomer = async () => {
+    // await addArress(address);
+    await addCustomer(customer);
+  };
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await getCustomers({
+        pageNum: 1,
+        length: 10,
+        sortBy: 'firstName',
+        fields: 'firstName lastName email phone _id',
+      });
+      const addedActionData = data.data?.map((d: any) => ({
+        ...d,
+        actions: <TableAction id={d._id} />,
+      }));
+      setCustomerData({ ...data, data: addedActionData });
+    })();
+  }, []);
 
   const customerColumns = [
     {
@@ -31,41 +60,32 @@ const Index: FC = () => {
       name: 'Phone',
       value: 'phone',
     },
+    {
+      name: 'Actions',
+      value: 'actions',
+    },
   ];
 
-  const customerData = {
-    total: 12,
-    pageNum: 1,
-    length: 10,
-    data: [
-      {
-        id: '12331',
-        firstName: 'Alice',
-        lastName: 'Brown',
-        email: 'alice.brown@gmail.com',
-        phone: '123-134-5678',
-      },
-      {
-        id: '12332',
-        firstName: 'Alice',
-        lastName: 'Brown',
-        email: 'alice.brown@gmail.com',
-        phone: '123-134-5678',
-      },
-      {
-        id: '12333',
-        firstName: 'Alice',
-        lastName: 'Brown',
-        email: 'alice.brown@gmail.com',
-        phone: '123-134-5678',
-      },
-    ],
-  };
-
   return (
-    <div>
+    <>
       <Navbar />
       <SearchablePaginatedTable
+        searchHeaderProps={{
+          buttons: [
+            {
+              loading: false,
+              text: 'Create',
+              type: 'default',
+              onClick: () => setOpenCreateModal(true),
+            },
+          ],
+          searchProps: {
+            loading: false,
+            placeholder: 'Search Customer (e.g. first name, last name, email)',
+            onSearch: () => {},
+            onChange: () => {},
+          },
+        }}
         tablePrpps={{ columns: customerColumns, data: customerData.data }}
         pagenationProps={{
           total: customerData.total,
@@ -73,7 +93,18 @@ const Index: FC = () => {
           length: customerData.length,
         }}
       />
-    </div>
+      {/* Create Modal */}
+      <GeneralModal
+        title="Create Customer"
+        isDisplay={openCreateModal}
+        body={
+          <CustomerInputs setCustomer={setCustomer} setAddress={setAddress} />
+        }
+        onClose={() => setOpenCreateModal(false)}
+        onYes={{ name: 'Create', action: async () => await createCustomer() }}
+        onNo={{ name: 'Cancel', action: () => setOpenCreateModal(false) }}
+      />
+    </>
   );
 };
 
