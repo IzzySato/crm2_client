@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { IoMdClose } from 'react-icons/io';
+import CloseIcon from '../icon/CloseIcon';
 
 type ButtonProps = {
   onClose: () => void;
@@ -14,7 +14,7 @@ const CloseButton: FC<ButtonProps> = ({ onClose }) => {
       data-modal-hide="default-modal"
     >
       <div className="text-xl">
-        <IoMdClose />
+        <CloseIcon />
       </div>
       <span className="sr-only">Close modal</span>
     </button>

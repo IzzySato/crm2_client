@@ -9,7 +9,7 @@ export type SearchHeaderProps = {
 
 const SearchHeader: FC<SearchHeaderProps> = ({
   buttons,
-  searchProps: { loading, placeholder, onSearch, onChange },
+  searchProps: { placeholder, onSearch },
 }) => {
   return (
     <div className="px-10 pt-4">
@@ -27,14 +27,7 @@ const SearchHeader: FC<SearchHeaderProps> = ({
             </div>
           ))}
       </div>
-      <div className="">
-        <SearchInput
-          loading={loading}
-          placeholder={placeholder}
-          onSearch={onSearch}
-          onChange={onChange}
-        />
-      </div>
+      <SearchInput placeholder={placeholder} onSearch={onSearch} />
     </div>
   );
 };

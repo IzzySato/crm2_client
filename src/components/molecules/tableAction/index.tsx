@@ -1,20 +1,25 @@
 import { FC, useState } from 'react';
 import DeleteIcon from '../../atoms/icon/DeleteIcon';
 import EditIcon from '../../atoms/icon/EditIcon';
-import ConfirmModal from '../modal';
-import { updateCustomer } from '../../../api/customer';
+import Modal from '../modal';
 
 type Props = {
   id: string;
+  updateBody: any;
+  actions: {
+    delete: {
+      message: string;
+      action: () => void;
+    };
+    update: {
+      action: () => void;
+    };
+  };
 };
 
-const TableAction: FC<Props> = ({ id }) => {
+const TableAction: FC<Props> = ({ id, actions, updateBody }) => {
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
-
-  const deleteCustomer = async () => {
-    const today = new Date();
-    await updateCustomer(id, { deletedAt: today });
-  };
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
 
   return (
     <>
@@ -25,23 +30,51 @@ const TableAction: FC<Props> = ({ id }) => {
         >
           <DeleteIcon />
         </div>
-        <div className="text-lg">
+        <div
+          onClick={() => setOpenUpdateModal(true)}
+          className="text-lg hover:cursor-pointer"
+        >
           <EditIcon />
         </div>
       </div>
 
       {/* Delete confirm modal */}
-      <ConfirmModal
+      <Modal
         title="Confirm"
         isDisplay={openConfirmModal}
         body={
-          <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-            Are you sure?
-          </p>
+          <>
+            <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+              Are you sure?
+            </p>
+            <p>{actions.delete.message}</p>
+          </>
         }
         onClose={() => setOpenConfirmModal(false)}
-        onYes={{ name: 'Yes', action: async () => await deleteCustomer()}}
-        onNo={{ name: 'Cancel', action: () => setOpenConfirmModal(false)}}
+        onYes={{
+          name: 'Delete',
+          action: () => {
+            actions.delete.action();
+            setOpenConfirmModal(false);
+          },
+        }}
+        onNo={{ name: 'Cancel', action: () => setOpenConfirmModal(false) }}
+      />
+
+      {/* Update modal */}
+      <Modal
+        title="Update"
+        isDisplay={openUpdateModal}
+        body={updateBody}
+        onClose={() => setOpenUpdateModal(false)}
+        onYes={{
+          name: 'Update',
+          action: () => {
+            actions.update.action();
+            setOpenUpdateModal(false);
+          },
+        }}
+        onNo={{ name: 'Cancel', action: () => setOpenUpdateModal(false) }}
       />
     </>
   );

@@ -5,7 +5,7 @@ export type TableProps = {
     name: string;
     value: string;
   }[];
-  data: any
+  data: any;
 };
 
 const Table: FC<TableProps> = ({ columns, data}) => {

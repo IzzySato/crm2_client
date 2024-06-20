@@ -1,3 +1,3 @@
-export const URL = {
+export const ADDRESS_URL = {
   BASE: '/address'
 };

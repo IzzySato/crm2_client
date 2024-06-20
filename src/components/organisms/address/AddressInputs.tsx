@@ -1,12 +1,21 @@
 import { FC, useEffect, useState } from 'react';
 import Input from '../../atoms/input';
 import DropDown from '../../atoms/dropdown';
+import { getAddressById } from '../../../api/address';
 
 type InputFieldProps = {
   setAddress: (data: any) => void;
+  setAddressOriginalData: (data: any) => void
+  addressIds: string[];
+  isCreate?: boolean;
 };
 
-const AddressInputs: FC<InputFieldProps> = ({ setAddress }) => {
+const AddressInputs: FC<InputFieldProps> = ({
+  isCreate = true,
+  setAddressOriginalData,
+  addressIds,
+  setAddress,
+}) => {
   const provinces = [
     {
       id: 'on',
@@ -58,9 +67,30 @@ const AddressInputs: FC<InputFieldProps> = ({ setAddress }) => {
     postcode: '',
   });
 
+  const [selectedProvince, setSelectedProvince] = useState('Provinces');
+
   useEffect(() => {
     setAddress(addressData);
-  }, [setAddress, addressData]);
+  }, [addressData]);
+
+  useEffect(() => {
+    (async () => {
+      console.log(addressIds);
+      if (!isCreate && addressIds[0]) {
+        const { data } = await getAddressById(addressIds[0]);
+        setAddressOriginalData(data);
+        if (data) {
+          setAddressData({
+            line1: data.line1,
+            line2: data.line2,
+            city: data.city,
+            province: data.province,
+            postcode: data.postcode,
+          });
+        }
+      }
+    })();
+  }, [addressIds]);
 
   return (
     <div>
@@ -99,8 +129,11 @@ const AddressInputs: FC<InputFieldProps> = ({ setAddress }) => {
       </div>
       <DropDown
         data={provinces}
-        name="Provinces"
-        setSelect={(data: any) => setAddressData({ ...addressData, province: data })}
+        name={selectedProvince}
+        setSelect={(data: any) => {
+          setAddressData({ ...addressData, province: data });
+          setSelectedProvince(data);
+        }}
       />
     </div>
   );

@@ -5,6 +5,10 @@ export const getCustomers = async (params = {}) => {
   return await API.get(CUSTOMER_URL.BASE, { params });
 };
 
+export const getCustomerById = async (id: string) => {
+  return await API.get(`${CUSTOMER_URL.BASE}/${id}`);
+};
+
 export const addCustomer = async (body = {}) => {
   return await API.post(CUSTOMER_URL.BASE, body);
 };
