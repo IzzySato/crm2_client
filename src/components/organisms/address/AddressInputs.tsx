@@ -75,7 +75,6 @@ const AddressInputs: FC<InputFieldProps> = ({
 
   useEffect(() => {
     (async () => {
-      console.log(addressIds);
       if (!isCreate && addressIds[0]) {
         const { data } = await getAddressById(addressIds[0]);
         setAddressOriginalData(data);

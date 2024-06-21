@@ -12,13 +12,12 @@ type Props = {
 const SearchablePaginatedTable: FC<Props> = ({
   searchHeaderProps: { buttons, searchProps },
   tablePrpps: { columns, data },
-  pagenationProps: { total, current, length },
+  pagenationProps,
 }) => {
 
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
-    setTableData(data);
     const values = columns.map(({value}) => (value));
     const newData = data.map((d: any) => {
       let newObj = {}
@@ -32,7 +31,7 @@ const SearchablePaginatedTable: FC<Props> = ({
     <>
       <SearchHeader buttons={buttons} searchProps={searchProps} />
       {data && <Table columns={columns} data={tableData} />}
-      <Pagination total={total} current={current} length={length} />
+      <Pagination pageName={pagenationProps.pageName} total={pagenationProps.total} loadPage={pagenationProps.loadPage}/>
     </>
   );
 };

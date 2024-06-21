@@ -4,6 +4,7 @@
 - React TypeScript
 - tailwind
 - Jest Chromium
+- Redux
 
 ## How to Start
 1. 'npm start'

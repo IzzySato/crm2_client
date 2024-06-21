@@ -1,100 +1,167 @@
 import { FC } from 'react';
-import { GrCaretPrevious, GrCaretNext } from "react-icons/gr";
+import PreviousIcon from '../icon/PreviousIcon';
+import NextIcon from '../icon/NextIcon';
+import Button from '../button';
+import { useSelector } from 'react-redux';
+import { RootState, store } from '../../../store';
+import { setParams } from '../../../store/slices/pages/customerPageSlice';
+import { PAGE_NAMES } from '../../../pages/constants';
 
 export type pagenationProps = {
+  pageName: string;
   total: number;
-  current: number;
-  length: number;
+  loadPage: () => void;
 };
 
-const Pagination: FC<pagenationProps> = ({ total, current, length }) => {
+const Pagination: FC<pagenationProps> = ({ pageName, total, loadPage }) => {
+  const customerPageParams = useSelector(
+    (state: RootState) => state.customer.params
+  );
+  const getPageParams = () => {
+    switch (pageName) {
+      case PAGE_NAMES.CUSTOMER.VALUE:
+        return {
+          ...customerPageParams,
+        };
+      default:
+        return {
+          pageNum: 1,
+          length: 10,
+        };
+    }
+  };
+
+  const totalNum = total / getPageParams().length;
+  const totalPages =
+    Math.floor(totalNum) === totalNum ? totalNum : Math.floor(totalNum) + 1;
+
+  const pageNumComponent = (arr: string[]) => {
+    return (
+      <div>
+        {arr.map((text) => (
+          <div
+            key={text}
+            className={`relative inline-flex items-center px-1 py-2 text-sm font-semibold ring-1 ring-inset focus:z-20 focus:outline-offset-0 ${
+              getPageParams().pageNum === parseInt(text)
+                ? 'bg-blue-100'
+                : 'ring-gray-300 hover:bg-gray-50'
+            } `}
+          >
+            <Button
+              text={text}
+              isDisabled={getPageParams().pageNum === parseInt(text)}
+              type="secondary"
+              onClick={() => {
+                if (text !== '...') {
+                  store.dispatch(
+                    setParams({
+                      ...getPageParams(),
+                      pageNum: parseInt(text),
+                    })
+                  );
+                }
+              }}
+            />
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const getPageSection = () => {
+    const currentPage = getPageParams().pageNum;
+    if (totalPages <= 5) {
+      // display all pages
+      const arr = Array(totalPages)
+        .fill('')
+        .map((_, index) => `${index + 1}`);
+      return pageNumComponent(arr);
+    } else if (currentPage <= 3) {
+      return pageNumComponent(['1', '2', '3', '...', `${totalPages}`]);
+    } else if (currentPage <= 4) {
+      return pageNumComponent([
+        '1',
+        '2',
+        '3',
+        '4',
+        '...',
+        totalPages.toString(),
+      ]);
+    } else if (currentPage >= totalPages - 3 && currentPage <= totalPages) {
+      return pageNumComponent([
+        '1',
+        '...',
+        `${totalPages - 3}`,
+        `${totalPages - 2}`,
+        `${totalPages - 1}`,
+        `${totalPages}`,
+      ]);
+    }
+    return pageNumComponent([
+      '1',
+      '...',
+      `${currentPage - 1} `,
+      `${currentPage}`,
+      `${currentPage + 1}`,
+      '...',
+      `${totalPages}`,
+    ]);
+  };
+
   return (
     <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-      <div className="flex flex-1 justify-between sm:hidden">
-        <a
-          href="#"
-          className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
-          Previous
-        </a>
-        <a
-          href="#"
-          className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
-          Next
-        </a>
-      </div>
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-        <div>
-          <p className="text-sm text-gray-700">
-            Showing
-            <span className="font-medium px-2">{current}</span>
-            to
-            <span className="font-medium px-2">{current + length}</span>
-            of
-            <span className="font-medium px-2">{total}</span>
-            results
-          </p>
-        </div>
+        <p className="text-sm text-gray-700">
+          Showing
+          <span className="font-medium px-2">{getPageParams().pageNum}</span>
+          to
+          <span className="font-medium px-2">{getPageParams().length}</span>
+          of
+          <span className="font-medium px-2">{total}</span>
+          results
+        </p>
         <div>
           <nav
             className="isolate inline-flex -space-x-px rounded-md shadow-sm"
             aria-label="Pagination"
           >
-            <a
-              href="#"
-              className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-            >
-              <span className="sr-only">Previous</span>
-              <div className='text-xl'><GrCaretPrevious /></div>
-            </a>
-            <a
-              href="#"
-              aria-current="page"
-              className="relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              1
-            </a>
-            <a
-              href="#"
-              className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-            >
-              2
-            </a>
-            <a
-              href="#"
-              className="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex"
-            >
-              3
-            </a>
-            <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
-              ...
-            </span>
-            <a
-              href="#"
-              className="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex"
-            >
-              8
-            </a>
-            <a
-              href="#"
-              className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-            >
-              9
-            </a>
-            <a
-              href="#"
-              className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-            >
-              10
-            </a>
-            <a
-              href="#"
-              className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-            >
-              <span className="sr-only">Next</span>
-              <div className='text-xl'><GrCaretNext /></div>
-            </a>
+            <div className="relative inline-flex p-1 items-center rounded-l-md ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0">
+              <Button
+                type={'secondary'}
+                icon={<PreviousIcon />}
+                isDisabled={getPageParams().pageNum === 1}
+                onClick={() => {
+                  if (getPageParams().pageNum !== 1) {
+                    store.dispatch(
+                      setParams({
+                        ...getPageParams(),
+                        pageNum: getPageParams().pageNum - 1,
+                      })
+                    );
+                  }
+                  // loadPage();
+                }}
+              />
+            </div>
+            {getPageSection()}
+            <div className="relative inline-flex items-center p-1 rounded-r-md ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0">
+              <Button
+                type="secondary"
+                isDisabled={getPageParams().pageNum === totalPages}
+                icon={<NextIcon />}
+                onClick={() => {
+                  if (getPageParams().pageNum !== totalPages) {
+                    store.dispatch(
+                      setParams({
+                        ...getPageParams(),
+                        pageNum: getPageParams().pageNum + 1,
+                      })
+                    );
+                  }
+                  // loadPage();
+                }}
+              />
+            </div>
           </nav>
         </div>
       </div>

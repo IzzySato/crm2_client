@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, useRef } from 'react';
 import Navbar from '../../components/organisms/Navbar';
 import SearchablePaginatedTable from '../../components/organisms/SearchablePaginatedTable';
 import { addCustomer, getCustomers, updateCustomer } from '../../api/customer';
@@ -9,8 +9,15 @@ import Toast from '../../components/atoms/toast';
 import CustomerTableAction from '../../components/organisms/customer/table/CustomerTableAction';
 import { getDifferentObjectOfTwo } from '../../utils/update';
 import { customerColumns } from './constants';
+import { useSelector } from 'react-redux';
+import { RootState, store } from '../../store';
+import { setParams } from '../../store/slices/pages/customerPageSlice';
+import { PAGE_NAMES } from '../constants';
 
 const Index: FC = () => {
+  const params = useSelector((state: RootState) => state.customer.params);
+  const isInitialized = useRef(false);
+
   const [customerData, setCustomerData] = useState({
     total: 0,
     pageNum: 1,
@@ -48,20 +55,22 @@ const Index: FC = () => {
     const newTableData = customerData.data.map((customer) => {
       if (customer['_id'] === id) {
         const newCustomer = Object.assign(customer, newData);
-        const updatedAction = Object.assign(newCustomer, { actions: (
-          <CustomerTableAction
-            data={newCustomer}
-            actions={{
-              update: editClickedFunc,
-              delete: deleteCustomer,
-            }}
-            setters={{
-              setCustomer,
-              setAddress,
-              setAddressOriginalData,
-            }}
-          />
-        )})
+        const updatedAction = Object.assign(newCustomer, {
+          actions: (
+            <CustomerTableAction
+              data={newCustomer}
+              actions={{
+                update: editClickedFunc,
+                delete: deleteCustomer,
+              }}
+              setters={{
+                setCustomer,
+                setAddress,
+                setAddressOriginalData,
+              }}
+            />
+          ),
+        });
         return updatedAction;
       }
       return customer;
@@ -71,7 +80,10 @@ const Index: FC = () => {
   };
 
   const editCustomer = async () => {
-    const customerDifference = getDifferentObjectOfTwo(customerOriginalData, customer);
+    const customerDifference = getDifferentObjectOfTwo(
+      customerOriginalData,
+      customer
+    );
     if (customerDifference && Object.keys(customerDifference).length > 0) {
       await updateCustomer(customerOriginalData._id, customerDifference);
       setToastMessage('Customer Updated');
@@ -92,7 +104,9 @@ const Index: FC = () => {
         addresses: [data[0]._id],
       });
       setToastMessage('Address Created');
-      updateCustomerTableData(customerOriginalData._id, {addresses: [data[0]._id]});
+      updateCustomerTableData(customerOriginalData._id, {
+        addresses: [data[0]._id],
+      });
     }
     if (addressDifference && Object.keys(addressDifference).length > 0) {
       await updateAddress(addressOriginalData._id, addressDifference);
@@ -126,14 +140,8 @@ const Index: FC = () => {
     setCustomerOriginalData(data);
   };
 
-  const loadCustomerData = async (seaechBy = '') => {
-    const { data } = await getCustomers({
-      pageNum: 1,
-      length: 10,
-      sortBy: '_id',
-      fields: 'firstName lastName email phone _id addresses',
-      searchBy: seaechBy,
-    });
+  const loadCustomerData = async () => {
+    const { data } = await getCustomers(params);
     const addedActionData = data.data?.map((d: any) => {
       return {
         _id: d._id,
@@ -169,11 +177,12 @@ const Index: FC = () => {
     setShowToast(true);
   };
 
+  // First rendered the page, load customer data
   useEffect(() => {
-    (async () => {
-      await loadCustomerData();
-    })();
-  }, []);
+      (async () => {
+        await loadCustomerData();
+      })();
+  }, [params.pageNum]);
 
   return (
     <>
@@ -196,7 +205,10 @@ const Index: FC = () => {
           ],
           searchProps: {
             placeholder: 'Search Customer (e.g. first name, last name, email)',
-            onSearch: async (value) => await loadCustomerData(value),
+            onSearch: async (value) => {
+              store.dispatch(setParams({ ...params, searchBy: value }));
+              await loadCustomerData();
+            },
           },
         }}
         tablePrpps={{
@@ -204,9 +216,9 @@ const Index: FC = () => {
           data: customerData.data,
         }}
         pagenationProps={{
+          pageName: PAGE_NAMES.CUSTOMER.VALUE,
           total: customerData.total,
-          current: customerData.pageNum,
-          length: customerData.length,
+          loadPage: loadCustomerData,
         }}
       />
       {/* Create Modal */}

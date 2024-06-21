@@ -3,14 +3,22 @@ import LoadingIcon from '../loading/LoadingIcon';
 
 export type ButtonProps = {
   loading?: boolean;
-  text: string;
+  text?: string;
   type: string;
   icon?: any;
+  isDisabled?: boolean;
   onClick: () => any;
 };
 
-const Button: FC<ButtonProps> = ({ icon, type, text, loading, onClick }) => {
-  const busstonTypes = {
+const Button: FC<ButtonProps> = ({
+  icon,
+  type,
+  text,
+  loading,
+  onClick,
+  isDisabled,
+}) => {
+  const styles = {
     default: {
       background: 'bg-blue-700',
       hover: 'hover:bg-blue-800',
@@ -19,8 +27,8 @@ const Button: FC<ButtonProps> = ({ icon, type, text, loading, onClick }) => {
       dark: 'dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800',
     },
     secondary: {
-      background: 'bg-white',
-      hover: 'hover:bg-gray-50',
+      background: '',
+      hover: '',
       text: 'font-semibold text-gray-900',
       focus: '',
       dark: '',
@@ -32,25 +40,30 @@ const Button: FC<ButtonProps> = ({ icon, type, text, loading, onClick }) => {
       focus: 'focus:outline-none focus:z-10 focus:ring-4 focus:ring-gray-100',
       dark: 'dark:focus:ring-gray-700 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:text-gray-400 dark:bg-gray-800',
     },
+    disabled: 'text-gray-300 hover:cursor-text',
+    common: 'flex font-medium rounded-lg text-sm px-3 py-2 text-center',
   };
 
-  const css = busstonTypes[type as keyof Object];
+  const css = styles[type as keyof Object];
 
   return (
     <button
-      onClick={onClick}
+      onClick={isDisabled ? () => {} : onClick}
       data-modal-hide="default-modal"
       type="button"
-      className={`${css['text' as keyof Object]} ${
-        css['background' as keyof Object]
-      } ${css['hover' as keyof Object]} ${
-        css['focus' as keyof Object]
-      } font-medium rounded-lg text-sm px-5 py-2.5 text-center ${
-        css['dark' as keyof Object]
-      } flex`}
+      className={`${styles['common' as keyof Object]}
+      ${
+        isDisabled
+          ? `${styles['disabled' as keyof Object]}`
+          : `${css['text' as keyof Object]}
+            ${css['background' as keyof Object]}
+            ${css['hover' as keyof Object]}
+            ${css['focus' as keyof Object]}
+            ${css['dark' as keyof Object]}`
+      }`}
     >
-      {loading === true ? <LoadingIcon /> : text }
-      {<div className='text-xl'>{icon}</div>}
+      {loading === true ? <LoadingIcon /> : text}
+      {<div className="text-xl">{icon}</div>}
     </button>
   );
 };
