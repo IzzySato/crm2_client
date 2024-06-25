@@ -1,8 +1,10 @@
 import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { FcDataConfiguration } from 'react-icons/fc';
 import { classNames } from '../../utils/css';
+import MobileBarIcon from '../atoms/icon/nav/MobileMenuIcon';
+import MobileCloseIcon from '../atoms/icon/nav/MobileCloseIcon';
+import NotificationIcon from '../atoms/icon/NotificationIcon';
+import ConfigIcon from '../atoms/icon/ConfigIcon';
 
 const navigation = [
   { name: 'Customers', href: '#', current: true },
@@ -29,9 +31,9 @@ export default function Navbar() {
                   <span className="absolute -inset-0.5" />
                   <span className="sr-only">Open main menu</span>
                   {open ? (
-                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                    <MobileCloseIcon />
                   ) : (
-                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                    <MobileBarIcon />
                   )}
                 </Disclosure.Button>
               </div>
@@ -63,15 +65,15 @@ export default function Navbar() {
                 >
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
+                  <NotificationIcon />
                 </button>
 
-                {/* Profile dropdown */}
+                {/* Config dropdown */}
                 <Menu as="div" className="relative ml-4">
                   <Menu.Button className="relative flex">
                     <span className="sr-only">Open user menu</span>
                     <div className="text-2xl">
-                      <FcDataConfiguration />
+                      <ConfigIcon />
                     </div>
                   </Menu.Button>
                   <Transition

@@ -31,7 +31,7 @@ const SearchablePaginatedTable: FC<Props> = ({
     <>
       <SearchHeader buttons={buttons} searchProps={searchProps} />
       {data && <Table columns={columns} data={tableData} />}
-      <Pagination pageName={pagenationProps.pageName} total={pagenationProps.total} loadPage={pagenationProps.loadPage}/>
+      <Pagination pageName={pagenationProps.pageName} total={pagenationProps.total} setPageLoadClicked={pagenationProps.setPageLoadClicked}/>
     </>
   );
 };

@@ -1,16 +1,8 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 
-const Login: FC = () => {
-  // const [isReady, setIsReady] = useState(false)
+const PageNotFound: FC = () => {
 
-  // useEffect(() => {
-  //   ;(async () => {
-  //   })();
-  // }, []);
-
-  return <div>
-    <p>page not found</p>
-  </div>;
+  return <p>page not found</p>;
 };
 
-export default Login;
+export default PageNotFound;

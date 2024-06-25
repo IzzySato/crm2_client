@@ -10,10 +10,10 @@ import { PAGE_NAMES } from '../../../pages/constants';
 export type pagenationProps = {
   pageName: string;
   total: number;
-  loadPage: () => void;
+  setPageLoadClicked: (value: boolean) => void;
 };
 
-const Pagination: FC<pagenationProps> = ({ pageName, total, loadPage }) => {
+const Pagination: FC<pagenationProps> = ({ pageName, total, setPageLoadClicked }) => {
   const customerPageParams = useSelector(
     (state: RootState) => state.customer.params
   );
@@ -50,7 +50,7 @@ const Pagination: FC<pagenationProps> = ({ pageName, total, loadPage }) => {
             <Button
               text={text}
               isDisabled={getPageParams().pageNum === parseInt(text)}
-              type="secondary"
+              type="noStyled"
               onClick={() => {
                 if (text !== '...') {
                   store.dispatch(
@@ -59,6 +59,7 @@ const Pagination: FC<pagenationProps> = ({ pageName, total, loadPage }) => {
                       pageNum: parseInt(text),
                     })
                   );
+                  setPageLoadClicked(true);
                 }
               }}
             />
@@ -115,7 +116,7 @@ const Pagination: FC<pagenationProps> = ({ pageName, total, loadPage }) => {
           Showing
           <span className="font-medium px-2">{getPageParams().pageNum}</span>
           to
-          <span className="font-medium px-2">{getPageParams().length}</span>
+          <span className="font-medium px-2">{total < getPageParams().length ? total : getPageParams().length}</span>
           of
           <span className="font-medium px-2">{total}</span>
           results
@@ -127,7 +128,7 @@ const Pagination: FC<pagenationProps> = ({ pageName, total, loadPage }) => {
           >
             <div className="relative inline-flex p-1 items-center rounded-l-md ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0">
               <Button
-                type={'secondary'}
+                type={'noStyled'}
                 icon={<PreviousIcon />}
                 isDisabled={getPageParams().pageNum === 1}
                 onClick={() => {
@@ -139,14 +140,14 @@ const Pagination: FC<pagenationProps> = ({ pageName, total, loadPage }) => {
                       })
                     );
                   }
-                  // loadPage();
+                  setPageLoadClicked(true);
                 }}
               />
             </div>
             {getPageSection()}
             <div className="relative inline-flex items-center p-1 rounded-r-md ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0">
               <Button
-                type="secondary"
+                type="noStyled"
                 isDisabled={getPageParams().pageNum === totalPages}
                 icon={<NextIcon />}
                 onClick={() => {
@@ -158,7 +159,7 @@ const Pagination: FC<pagenationProps> = ({ pageName, total, loadPage }) => {
                       })
                     );
                   }
-                  // loadPage();
+                  setPageLoadClicked(true);
                 }}
               />
             </div>

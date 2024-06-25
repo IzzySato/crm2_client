@@ -86,6 +86,7 @@ const AddressInputs: FC<InputFieldProps> = ({
             province: data.province,
             postcode: data.postcode,
           });
+          setSelectedProvince(data.province);
         }
       }
     })();

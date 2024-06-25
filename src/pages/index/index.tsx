@@ -25,6 +25,7 @@ const Index: FC = () => {
     data: [],
   });
   const [showToast, setShowToast] = useState(false);
+  const [pageLoadClicked, setPageLoadClicked] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [openCreateModal, setOpenCreateModal] = useState(false);
   // For Edit and Craete new customer data
@@ -167,6 +168,7 @@ const Index: FC = () => {
       };
     });
     setCustomerData({ ...data, data: addedActionData });
+    setPageLoadClicked(false);
   };
 
   const deleteCustomer = async (id: string) => {
@@ -177,12 +179,15 @@ const Index: FC = () => {
     setShowToast(true);
   };
 
-  // First rendered the page, load customer data
+  // First rendered the page or pageLoadClicked is true
   useEffect(() => {
+    if (!isInitialized.current || pageLoadClicked) {
       (async () => {
         await loadCustomerData();
       })();
-  }, [params.pageNum]);
+      isInitialized.current = true;
+    }
+  }, [pageLoadClicked]);
 
   return (
     <>
@@ -218,7 +223,7 @@ const Index: FC = () => {
         pagenationProps={{
           pageName: PAGE_NAMES.CUSTOMER.VALUE,
           total: customerData.total,
-          loadPage: loadCustomerData,
+          setPageLoadClicked: setPageLoadClicked,
         }}
       />
       {/* Create Modal */}
