@@ -203,6 +203,7 @@ const Index: FC = () => {
           buttons: [
             {
               loading: false,
+              testId: 'customerCreateBtn',
               text: 'Create',
               type: 'default',
               onClick: () => setOpenCreateModal(true),

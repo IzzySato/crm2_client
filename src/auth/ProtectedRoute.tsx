@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 type ProtectedRouteProps = {
   component: React.ComponentType;
@@ -8,20 +9,9 @@ type ProtectedRouteProps = {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   component: Component,
 }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const navigate = useNavigate();
+  const token = useSelector((state: RootState) => state.auth.token); 
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-      navigate('/login');
-    }
-  }, [navigate]);
-
-  return isAuthenticated ? <Component /> : <></>;
+  return token ? <Component /> : <></>;
 };
 
 export default ProtectedRoute;

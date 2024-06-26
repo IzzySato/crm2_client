@@ -16,14 +16,9 @@ const SearchHeader: FC<SearchHeaderProps> = ({
       <div className="mb-2">
         {buttons &&
           buttons.length > 0 &&
-          buttons.map(({ loading, text, type, onClick }) => (
-            <div key={text}>
-              <Button
-                loading={loading}
-                text={text}
-                type={type}
-                onClick={onClick}
-              />
+          buttons.map((prop) => (
+            <div key={prop.text}>
+              <Button {...prop}/>
             </div>
           ))}
       </div>

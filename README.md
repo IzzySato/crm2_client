@@ -3,8 +3,9 @@
 ## Technologies
 - React TypeScript
 - tailwind
+
+## Test
 - Jest Chromium
-- Redux
 
 ## How to Start
 1. 'npm start'
