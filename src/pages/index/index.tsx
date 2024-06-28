@@ -230,6 +230,7 @@ const Index: FC = () => {
       {/* Create Modal */}
       <GeneralModal
         title="Create Customer"
+        testClass="createCustomerModal"
         isDisplay={openCreateModal}
         body={
           <CustomerInputs setCustomer={setCustomer} setAddress={setAddress} />

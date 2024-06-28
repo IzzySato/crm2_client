@@ -5,6 +5,7 @@ import Button from '../../atoms/button';
 type Props = {
   title: string;
   isDisplay: boolean;
+  testClass?: string;
   body: any;
   onClose: () => void;
   onYes: {
@@ -19,6 +20,7 @@ type Props = {
 
 const GeneralModal: FC<Props> = ({
   isDisplay,
+  testClass = '',
   title,
   body,
   onClose,
@@ -31,7 +33,7 @@ const GeneralModal: FC<Props> = ({
         <div
           id="default-modal"
           aria-hidden="true"
-          className="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
+          className={`${testClass} overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full`}
         >
           <div className="mx-auto relative p-4 w-full max-w-2xl max-h-full">
             {/* Modal content */}

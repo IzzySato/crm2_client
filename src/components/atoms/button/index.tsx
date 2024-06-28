@@ -71,7 +71,7 @@ const Button: FC<ButtonProps> = ({
             ${css['dark' as keyof Object]}`
       }`}
     >
-      {loading === true ? <LoadingIcon /> : text}
+      {loading === true ? <LoadingIcon /> : <p>{text}</p>}
       {<div className="text-xl">{icon}</div>}
     </button>
   );
