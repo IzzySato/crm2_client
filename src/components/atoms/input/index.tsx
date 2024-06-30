@@ -1,7 +1,8 @@
 import { FC } from 'react';
 
-type InputProps = {
+export type InputProps = {
   width?: string;
+  label?: string;
   placeholder: string;
   value?: string;
   isRequired?: boolean;

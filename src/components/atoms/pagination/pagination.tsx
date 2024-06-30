@@ -5,7 +5,7 @@ import Button from '../button';
 import { useSelector } from 'react-redux';
 import { RootState, store } from '../../../store';
 import { setParams } from '../../../store/slices/pages/customerPageSlice';
-import { PAGE_NAMES } from '../../../pages/constants';
+import CUSTOMER_PAGE from '../../../pages/index/constants';
 
 export type pagenationProps = {
   pageName: string;
@@ -19,7 +19,7 @@ const Pagination: FC<pagenationProps> = ({ pageName, total, setPageLoadClicked }
   );
   const getPageParams = () => {
     switch (pageName) {
-      case PAGE_NAMES.CUSTOMER.VALUE:
+      case CUSTOMER_PAGE.PAGE_NAME.VALUE:
         return {
           ...customerPageParams,
         };

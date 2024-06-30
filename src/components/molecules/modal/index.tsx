@@ -10,6 +10,7 @@ type Props = {
   onClose: () => void;
   onYes: {
     name: string
+    isDisabled?: boolean,
     action: () => void
   };
   onNo: {
@@ -53,6 +54,7 @@ const GeneralModal: FC<Props> = ({
               <div className="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                 <Button
                   loading={false}
+                  isDisabled={onYes.isDisabled}
                   text={onYes.name}
                   type={'default'}
                   onClick={onYes.action}

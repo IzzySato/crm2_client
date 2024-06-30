@@ -3,6 +3,7 @@ import storageSession from 'redux-persist/lib/storage/session';
 import { persistReducer, persistStore } from 'redux-persist';
 import customerPageSlice from './slices/pages/customerPageSlice';
 import authSlice from './slices/pages/authSlice';
+import productPageSlice from './slices/pages/productPageSlice';
 
 const persistConfig = {
   key: 'root',
@@ -11,6 +12,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   customer: customerPageSlice,
+  product: productPageSlice,
   auth: authSlice,
 });
 

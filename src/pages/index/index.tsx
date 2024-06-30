@@ -8,22 +8,23 @@ import { addAddress, updateAddress } from '../../api/address';
 import Toast from '../../components/atoms/toast';
 import CustomerTableAction from '../../components/organisms/customer/table/CustomerTableAction';
 import { getDifferentObjectOfTwo } from '../../utils/update';
-import { customerColumns } from './constants';
+import CUSTOMER_PAGE from './constants';
 import { useSelector } from 'react-redux';
 import { RootState, store } from '../../store';
 import { setParams } from '../../store/slices/pages/customerPageSlice';
-import { PAGE_NAMES } from '../constants';
+import { ResponseProps } from '../../utils/type/response';
 
-const Index: FC = () => {
+const CustomerPage: FC = () => {
   const params = useSelector((state: RootState) => state.customer.params);
   const isInitialized = useRef(false);
 
-  const [customerData, setCustomerData] = useState({
+  const [response, setResponse] = useState<ResponseProps>({
     total: 0,
     pageNum: 1,
     length: 10,
     data: [],
   });
+  const [validCustomerData, setValidCustomerData] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [pageLoadClicked, setPageLoadClicked] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
@@ -53,7 +54,7 @@ const Index: FC = () => {
   };
 
   const updateCustomerTableData = (id: string, newData: any) => {
-    const newTableData = customerData.data.map((customer) => {
+    const newTableData = response.data.map((customer) => {
       if (customer['_id'] === id) {
         const newCustomer = Object.assign(customer, newData);
         const updatedAction = Object.assign(newCustomer, {
@@ -76,8 +77,8 @@ const Index: FC = () => {
       }
       return customer;
     });
-    const newObj = Object.assign(customerData, { data: newTableData });
-    setCustomerData(newObj);
+    const newObj = Object.assign(response, { data: newTableData });
+    setResponse(newObj);
   };
 
   const editCustomer = async () => {
@@ -141,7 +142,7 @@ const Index: FC = () => {
     setCustomerOriginalData(data);
   };
 
-  const loadCustomerData = async () => {
+  const loadresponse = async () => {
     const { data } = await getCustomers(params);
     const addedActionData = data.data?.map((d: any) => {
       return {
@@ -167,14 +168,14 @@ const Index: FC = () => {
         ),
       };
     });
-    setCustomerData({ ...data, data: addedActionData });
+    setResponse({ ...data, data: addedActionData });
     setPageLoadClicked(false);
   };
 
   const deleteCustomer = async (id: string) => {
     const today = new Date();
     await updateCustomer(id, { deletedAt: today });
-    await loadCustomerData();
+    await loadresponse();
     setToastMessage('Customer Deleted');
     setShowToast(true);
   };
@@ -183,7 +184,7 @@ const Index: FC = () => {
   useEffect(() => {
     if (!isInitialized.current || pageLoadClicked) {
       (async () => {
-        await loadCustomerData();
+        await loadresponse();
       })();
       isInitialized.current = true;
     }
@@ -199,33 +200,19 @@ const Index: FC = () => {
         setDisplay={setShowToast}
       />
       <SearchablePaginatedTable
-        searchHeaderProps={{
-          buttons: [
-            {
-              loading: false,
-              testId: 'customerCreateBtn',
-              text: 'Create',
-              type: 'default',
-              onClick: () => setOpenCreateModal(true),
-            },
-          ],
-          searchProps: {
-            placeholder: 'Search Customer (e.g. first name, last name, email)',
-            onSearch: async (value) => {
-              store.dispatch(setParams({ ...params, searchBy: value }));
-              await loadCustomerData();
-            },
+        pageName={CUSTOMER_PAGE.PAGE_NAME.VALUE}
+        onSearch={async (value) => {
+          store.dispatch(setParams({ ...params, searchBy: value }));
+          await loadresponse();
+        }}
+        response={response}
+        actions={[
+          {
+            name: CUSTOMER_PAGE.ACTIONS.CREATE.NAME,
+            onClick: () => setOpenCreateModal(true),
           },
-        }}
-        tablePrpps={{
-          columns: customerColumns,
-          data: customerData.data,
-        }}
-        pagenationProps={{
-          pageName: PAGE_NAMES.CUSTOMER.VALUE,
-          total: customerData.total,
-          setPageLoadClicked: setPageLoadClicked,
-        }}
+        ]}
+        setPageLoadClicked={setPageLoadClicked}
       />
       {/* Create Modal */}
       <GeneralModal
@@ -233,14 +220,20 @@ const Index: FC = () => {
         testClass="createCustomerModal"
         isDisplay={openCreateModal}
         body={
-          <CustomerInputs setCustomer={setCustomer} setAddress={setAddress} />
+          <CustomerInputs
+            setCustomer={setCustomer}
+            setAddress={setAddress}
+            validate={(value) => {
+              setValidCustomerData(value);
+            }}
+          />
         }
         onClose={() => setOpenCreateModal(false)}
-        onYes={{ name: 'Create', action: async () => await createCustomer() }}
+        onYes={{ name: 'Create', isDisabled: !validCustomerData, action: async () => await createCustomer() }}
         onNo={{ name: 'Cancel', action: () => setOpenCreateModal(false) }}
       />
     </>
   );
 };
 
-export default Index;
+export default CustomerPage;

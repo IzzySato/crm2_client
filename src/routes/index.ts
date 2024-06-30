@@ -1,13 +1,20 @@
-import Index from '../pages/index';
+import CustomerPage from '../pages/index';
 import Login from '../pages/login';
 import LoginFailed from '../pages/login/loginFailed';
 import PageNotFound from '../pages/pageNotFound';
+import ProductPage from '../pages/product';
 
 export const routers = [
   {
     name: 'home',
     path: '/',
-    element: Index,
+    element: CustomerPage,
+    protectedRoute: true,
+  },
+  {
+    name: 'product',
+    path: '/product',
+    element: ProductPage,
     protectedRoute: true,
   },
   {

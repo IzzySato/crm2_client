@@ -1,16 +1,20 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
+import Input, { InputProps } from '../../atoms/input';
 
 type InputFieldProps = {
-  loading: boolean
-}
+  error?: string;
+  inputProps: InputProps
+};
 
-const InputField: FC<InputFieldProps> = ({ loading }) => {
-  const [isReady, setIsReady] = useState(false)
+const InputField: FC<InputFieldProps> = (props) => {
 
-  useEffect(() => {
-  }, []);
-
-  return <div>test</div>;
+  return (
+    <label className='text-white text-sm'>
+      {props.inputProps.label} {props.inputProps.isRequired ? '*' : ''}
+      <Input { ...props.inputProps }/>
+      <p className='text-red-400 text-xs'>{props.error}</p>
+    </label>
+  )
 };
 
 export default InputField;

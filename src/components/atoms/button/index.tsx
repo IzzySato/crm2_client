@@ -7,7 +7,7 @@ export type ButtonProps = {
   type: string;
   icon?: any;
   isDisabled?: boolean;
-  testId?: string,
+  testClass?: string,
   onClick: () => any;
 };
 
@@ -15,10 +15,10 @@ const Button: FC<ButtonProps> = ({
   icon,
   type,
   text,
-  loading,
+  loading = false,
   onClick,
   isDisabled,
-  testId = '',
+  testClass = '',
 }) => {
   const styles = {
     default: {
@@ -50,7 +50,7 @@ const Button: FC<ButtonProps> = ({
       dark: '',
     },
     disabled: 'text-gray-300 hover:cursor-text',
-    common: `${testId} flex font-medium rounded-lg text-sm px-3 py-2 text-center`,
+    common: `${testClass} flex font-medium rounded-lg text-sm px-3 py-2 text-center`,
   };
 
   const css = styles[type as keyof Object];

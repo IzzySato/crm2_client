@@ -20,6 +20,7 @@ const CustomerTableAction: FC<Props> = ({ actions, data, setters }) => {
     <TableAction
     updateBody={
       <CustomerInputs
+        validate={(value) => {}}
         isCreate={false}
         setCustomer={(newCustomerData) => setters.setCustomer(newCustomerData)}
         setAddress={(newAddressData) => setters.setAddress(newAddressData)}

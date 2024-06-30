@@ -28,8 +28,8 @@ const SearchInput: FC<SearchProps> = ({
         <Input placeholder={placeholder} onChange={({ target: {value}}) => setSearchValue(value)} value={searchValue}/>
         <div className="absolute right-0 bottom-2 px-4">
           <Button
-            text={'Search'}
-            type={'default'}
+            text='Search'
+            type='default'
             onClick={() => onSearch(searchValue)}
           />
         </div>
