@@ -8,7 +8,7 @@ type Props = {
   setCustomer: (data: any) => void;
   setAddress: (data: any) => void;
   validate: (value: boolean) => void;
-  setAddressOriginalData?: (data: any) => void;
+  loadedAddress?: (data: any) => void;
   defaultValues?: {
     firstName: string;
     lastName: string;
@@ -24,7 +24,7 @@ const CustomerInputs: FC<Props> = ({
   validate,
   setCustomer,
   setAddress,
-  setAddressOriginalData = () => {},
+  loadedAddress = () => {},
 }) => {
   const [customerData, setCustomerData] = useState({
     firstName: defaultValues?.firstName || '',
@@ -36,16 +36,14 @@ const CustomerInputs: FC<Props> = ({
   useEffect(() => {
     // passing to parent
     setCustomer(customerData);
-    validate(
-      customerData.firstName !== '' &&
-        customerData.lastName !== '' &&
-        customerData.email !== '' &&
-        validateEmail(customerData.email) !== null
-    );
+    validate(customerData.firstName !== '' &&
+    customerData.lastName !== '' &&
+    customerData.email !== '' &&
+    validateEmail(customerData.email) !== null);
   }, [setCustomer, customerData]);
 
   return (
-    <div className="">
+    <>
       <div className="mb-2">
         <InputField
           error={customerData.firstName === '' ? 'First name is required' : ''}
@@ -104,12 +102,12 @@ const CustomerInputs: FC<Props> = ({
       <div className="mb-2">
         <AddressInputs
           isCreate={isCreate}
-          setAddressOriginalData={setAddressOriginalData}
+          loadedAddress={loadedAddress}
           setAddress={setAddress}
           addressIds={defaultValues?.addresses}
         />
       </div>
-    </div>
+    </>
   );
 };
 

@@ -12,6 +12,7 @@ type Props = {
       action: () => void;
     };
     update: {
+      isDisabled?: boolean
       action: () => void;
     };
   };
@@ -69,6 +70,7 @@ const TableAction: FC<Props> = ({ id, actions, updateBody }) => {
         onClose={() => setOpenUpdateModal(false)}
         onYes={{
           name: 'Update',
+          isDisabled: actions.update.isDisabled,
           action: () => {
             actions.update.action();
             setOpenUpdateModal(false);

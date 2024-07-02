@@ -3,7 +3,8 @@ import Table from '../atoms/table';
 import Pagination from '../atoms/pagination/pagination';
 import SearchHeader from './SearchHeader';
 import { getPageInfo } from '../../utils/pageHelper';
-import { ButtonProps } from '../atoms/button/index'
+import { ButtonProps } from '../atoms/button/index';
+import NoTableData from './NoTableData';
 
 type HeaderAction = {
   name: string;
@@ -28,10 +29,11 @@ const SearchablePaginatedTable: FC<Props> = ({
   const [tableData, setTableData] = useState([]);
   const [buttons, setButtons] = useState<ButtonProps[]>([]);
   const PAGE = getPageInfo(pageName);
-
+  
   useEffect(() => {
     const values = PAGE.TABLE_COLUMNS.map(({ value }) => value);
-    const newData = response.data.map((d: any) => {
+    const data = response.data.length > response.length ? response.data.slice(0, 10) : response.data;
+    const newData = data.map((d: any) => {
       let newObj = {};
       values.forEach(
         (key) => (newObj = Object.assign(newObj, { [key]: d[key] }))
@@ -43,8 +45,12 @@ const SearchablePaginatedTable: FC<Props> = ({
       return {
         loading: false,
         testClass:
-          PAGE.ACTIONS[name as keyof Object]['TEST_CLASS' as keyof Object].toString(),
-        text: PAGE.ACTIONS[name as keyof Object]['TEXT' as keyof Object].toString(),
+          PAGE.ACTIONS[name as keyof Object][
+            'TEST_CLASS' as keyof Object
+          ].toString(),
+        text: PAGE.ACTIONS[name as keyof Object][
+          'TEXT' as keyof Object
+        ].toString(),
         type: 'default',
         onClick,
       };
@@ -61,12 +67,18 @@ const SearchablePaginatedTable: FC<Props> = ({
           onSearch,
         }}
       />
-      {response.data && <Table columns={PAGE.TABLE_COLUMNS} data={tableData} />}
-      <Pagination
-        pageName={pageName}
-        total={response.total}
-        setPageLoadClicked={setPageLoadClicked}
-      />
+      {response.data?.length > 0 ? (
+        <>
+          <Table columns={PAGE.TABLE_COLUMNS} data={tableData} />
+          <Pagination
+            pageName={pageName}
+            total={response.total}
+            setPageLoadClicked={setPageLoadClicked}
+          />
+        </>
+      ) : (
+        <NoTableData />
+      )}
     </>
   );
 };

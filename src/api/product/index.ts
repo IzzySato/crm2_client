@@ -10,5 +10,5 @@ export const addProduct = async (body = {}) => {
 };
 
 export const updateProduct = async (id: string, body = {}) => {
-  return await API.post(`${PRODUCT_URL.BASE}/${id}`, body);
+  return await API.put(`${PRODUCT_URL.BASE}/${id}`, body);
 };

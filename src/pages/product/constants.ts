@@ -24,6 +24,10 @@ const PAGE = {
       name: 'Description',
       value: 'description',
     },
+    {
+      name: 'Actions',
+      value: 'actions',
+    },
   ],
   ACTIONS: {
     CREATE: {
@@ -40,6 +44,11 @@ const PAGE = {
     TEST_CLASS: 'productSearch',
     PLACEHOLDER: 'Search Product (e.g. product name, sku, tags )',
   },
+};
+
+export const PRODUCT_ACTIONS = {
+  UPDATE: 'update',
+  DELETE: 'delete',
 };
 
 export default PAGE;

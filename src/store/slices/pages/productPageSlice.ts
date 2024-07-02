@@ -13,11 +13,11 @@ const productPageSlice = createSlice({
   name: 'productPage',
   initialState,
   reducers: {
-    setParams(state, action) {
+    setProductParams(state, action) {
       state.params = action.payload;
     },
   },
 });
 
-export const { setParams } = productPageSlice.actions;
+export const { setProductParams } = productPageSlice.actions;
 export default productPageSlice.reducer;

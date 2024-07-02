@@ -4,8 +4,10 @@ import NextIcon from '../icon/NextIcon';
 import Button from '../button';
 import { useSelector } from 'react-redux';
 import { RootState, store } from '../../../store';
-import { setParams } from '../../../store/slices/pages/customerPageSlice';
+import { setCustomerParams } from '../../../store/slices/pages/customerPageSlice';
+import { setProductParams } from '../../../store/slices/pages/productPageSlice';
 import CUSTOMER_PAGE from '../../../pages/index/constants';
+import PRODUCT_PAGE from '../../../pages/product/constants';
 
 export type pagenationProps = {
   pageName: string;
@@ -13,15 +15,49 @@ export type pagenationProps = {
   setPageLoadClicked: (value: boolean) => void;
 };
 
-const Pagination: FC<pagenationProps> = ({ pageName, total, setPageLoadClicked }) => {
+const Pagination: FC<pagenationProps> = ({
+  pageName,
+  total,
+  setPageLoadClicked,
+}) => {
   const customerPageParams = useSelector(
     (state: RootState) => state.customer.params
   );
+  const productPageParams = useSelector(
+    (state: RootState) => state.product.params
+  );
+
+  const setPageNumParams = (text: string) => {
+    switch (pageName) {
+      case CUSTOMER_PAGE.PAGE_NAME.VALUE:
+        store.dispatch(
+          setCustomerParams({
+            ...getPageParams(),
+            pageNum: parseInt(text),
+          })
+        );
+        break;
+      case PRODUCT_PAGE.PAGE_NAME.VALUE:
+        store.dispatch(
+          setProductParams({
+            ...getPageParams(),
+            pageNum: parseInt(text),
+          })
+        );
+        break;
+      default:
+    }
+  };
+
   const getPageParams = () => {
     switch (pageName) {
       case CUSTOMER_PAGE.PAGE_NAME.VALUE:
         return {
           ...customerPageParams,
+        };
+      case PRODUCT_PAGE.PAGE_NAME.VALUE:
+        return {
+          ...productPageParams,
         };
       default:
         return {
@@ -53,12 +89,7 @@ const Pagination: FC<pagenationProps> = ({ pageName, total, setPageLoadClicked }
               type="noStyled"
               onClick={() => {
                 if (text !== '...') {
-                  store.dispatch(
-                    setParams({
-                      ...getPageParams(),
-                      pageNum: parseInt(text),
-                    })
-                  );
+                  setPageNumParams(text);
                   setPageLoadClicked(true);
                 }
               }}
@@ -116,7 +147,9 @@ const Pagination: FC<pagenationProps> = ({ pageName, total, setPageLoadClicked }
           Showing
           <span className="font-medium px-2">{getPageParams().pageNum}</span>
           to
-          <span className="font-medium px-2">{total < getPageParams().length ? total : getPageParams().length}</span>
+          <span className="font-medium px-2">
+            {total < getPageParams().length ? total : getPageParams().length}
+          </span>
           of
           <span className="font-medium px-2">{total}</span>
           results
@@ -133,12 +166,7 @@ const Pagination: FC<pagenationProps> = ({ pageName, total, setPageLoadClicked }
                 isDisabled={getPageParams().pageNum === 1}
                 onClick={() => {
                   if (getPageParams().pageNum !== 1) {
-                    store.dispatch(
-                      setParams({
-                        ...getPageParams(),
-                        pageNum: getPageParams().pageNum - 1,
-                      })
-                    );
+                    setPageNumParams((getPageParams().pageNum - 1).toString());
                   }
                   setPageLoadClicked(true);
                 }}
@@ -152,12 +180,7 @@ const Pagination: FC<pagenationProps> = ({ pageName, total, setPageLoadClicked }
                 icon={<NextIcon />}
                 onClick={() => {
                   if (getPageParams().pageNum !== totalPages) {
-                    store.dispatch(
-                      setParams({
-                        ...getPageParams(),
-                        pageNum: getPageParams().pageNum + 1,
-                      })
-                    );
+                    setPageNumParams((getPageParams().pageNum + 1).toString());
                   }
                   setPageLoadClicked(true);
                 }}

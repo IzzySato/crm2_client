@@ -7,9 +7,9 @@ import NotificationIcon from '../atoms/icon/NotificationIcon';
 import ConfigIcon from '../atoms/icon/ConfigIcon';
 
 const navigation = [
-  { name: 'Customers', href: '#', current: true },
+  { name: 'Customers', href: '/', current: true },
   { name: 'Works', href: '#', current: false },
-  { name: 'Products', href: '#', current: false },
+  { name: 'Products', href: '/product', current: false },
 ];
 
 const memuItems = [

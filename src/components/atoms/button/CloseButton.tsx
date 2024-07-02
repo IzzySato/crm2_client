@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import CloseIcon from '../icon/CloseIcon';
+import CloseIcon from '../icon/close/CloseIcon';
 
 type ButtonProps = {
   onClose: () => void;

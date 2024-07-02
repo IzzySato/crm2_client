@@ -46,4 +46,9 @@ const PAGE = {
   }
 }
 
+export const CUSTOMER_ACTIONS = {
+  UPDATE: 'update',
+  DELETE: 'delete',
+};
+
 export default PAGE;

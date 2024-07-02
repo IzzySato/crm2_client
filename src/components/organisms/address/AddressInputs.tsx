@@ -2,62 +2,21 @@ import { FC, useEffect, useState } from 'react';
 import Input from '../../atoms/input';
 import DropDown from '../../atoms/dropdown';
 import { getAddressById } from '../../../api/address';
+import { PROVINCES } from './constants';
 
 type InputFieldProps = {
   setAddress: (data: any) => void;
-  setAddressOriginalData: (data: any) => void
+  loadedAddress: (data: any) => void
   addressIds: string[];
   isCreate?: boolean;
 };
 
 const AddressInputs: FC<InputFieldProps> = ({
   isCreate = true,
-  setAddressOriginalData,
+  loadedAddress,
   addressIds,
   setAddress,
 }) => {
-  const provinces = [
-    {
-      id: 'on',
-      name: 'ON',
-    },
-    {
-      id: 'qc',
-      name: 'QC',
-    },
-    {
-      id: 'ns',
-      name: 'NS',
-    },
-    {
-      id: 'nb',
-      name: 'NB',
-    },
-    {
-      id: 'mb',
-      name: 'MB',
-    },
-    {
-      id: 'bc',
-      name: 'BC',
-    },
-    {
-      id: 'pe',
-      name: 'PE',
-    },
-    {
-      id: 'sk',
-      name: 'SK',
-    },
-    {
-      id: 'ab',
-      name: 'AB',
-    },
-    {
-      id: 'nl',
-      name: 'NL',
-    },
-  ];
 
   const [addressData, setAddressData] = useState({
     line1: '',
@@ -77,7 +36,8 @@ const AddressInputs: FC<InputFieldProps> = ({
     (async () => {
       if (!isCreate && addressIds[0]) {
         const { data } = await getAddressById(addressIds[0]);
-        setAddressOriginalData(data);
+        // passing to parent
+        loadedAddress(data);
         if (data) {
           setAddressData({
             line1: data.line1,
@@ -128,7 +88,7 @@ const AddressInputs: FC<InputFieldProps> = ({
         />
       </div>
       <DropDown
-        data={provinces}
+        data={PROVINCES}
         name={selectedProvince}
         setSelect={(data: any) => {
           setAddressData({ ...addressData, province: data });

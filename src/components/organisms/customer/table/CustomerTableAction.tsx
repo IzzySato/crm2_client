@@ -1,52 +1,56 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import TableAction from '../../../molecules/tableAction';
 import CustomerInputs from '../CustomerInputs';
 
 type Props = {
-  data: any,
+  data: any;
   actions: {
-    update: (data: any) => void
-    delete: (id: string) => void
-  },
-  setters: {
-    setCustomer: (data: any) => void
-    setAddress: (data: any) => void
-    setAddressOriginalData: (data: any) => void
-  }
+    update: (data: any) => void;
+    delete: (data: any) => void;
+  };
 };
 
-const CustomerTableAction: FC<Props> = ({ actions, data, setters }) => {
+const CustomerTableAction: FC<Props> = ({ actions, data }) => {
+  const [isValidData, setIsVaildData] = useState(false);
+  const [updatedCustomer, setUpdatedCustomer] = useState({});
+  const [updatedAddress, setUpdatedAddress] = useState({});
+  const [originalAddress, setOriginalAddress] = useState({});
   return (
     <TableAction
-    updateBody={
-      <CustomerInputs
-        validate={(value) => {}}
-        isCreate={false}
-        setCustomer={(newCustomerData) => setters.setCustomer(newCustomerData)}
-        setAddress={(newAddressData) => setters.setAddress(newAddressData)}
-        setAddressOriginalData={(originalData) => setters.setAddressOriginalData(originalData)}
-        defaultValues={{
-          firstName: data.firstName,
-          lastName: data.lastName,
-          email: data.email,
-          phone: data.phone,
-          addresses: data.addresses,
-        }}
-      />
-    }
-    id={data._id}
-    actions={{
-      delete: {
-        message: `Delete Customer Id: ${data._id}`,
-        action: () => actions.delete(data._id),
-      },
-      update: {
-        action: () => {
-          actions.update(data)
+      updateBody={
+        // Edit Customer
+        <CustomerInputs
+          validate={(value) => setIsVaildData(value)}
+          isCreate={false}
+          setCustomer={(newCustomerData) => setUpdatedCustomer(newCustomerData)}
+          setAddress={(newAddressData) => setUpdatedAddress(newAddressData)}
+          loadedAddress={(originalData) => setOriginalAddress(originalData)}
+          defaultValues={{
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            phone: data.phone,
+            addresses: data.addresses,
+          }}
+        />
+      }
+      id={data._id}
+      actions={{
+        delete: {
+          message: `Delete Customer Id: ${data._id}`,
+          action: () => actions.delete(data),
         },
-      },
-    }}
-  />
+        update: {
+          isDisabled: !isValidData,
+          action: () => {
+            actions.update({
+              address: { originalAddress, updatedAddress },
+              customer: { originalCustomer: data, updatedCustomer },
+            });
+          },
+        },
+      }}
+    />
   );
 };
 
