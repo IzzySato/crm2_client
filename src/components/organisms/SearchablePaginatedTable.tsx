@@ -3,65 +3,107 @@ import Table from '../atoms/table';
 import Pagination from '../atoms/pagination/pagination';
 import SearchHeader from './SearchHeader';
 import { getPageInfo } from '../../utils/pageHelper';
-import { ButtonProps } from '../atoms/button/index';
 import NoTableData from './NoTableData';
-
-type HeaderAction = {
-  name: string;
-  onClick: () => void;
-};
+import TableAction from '../molecules/tableAction';
+import CUSTOMER_PAGE from '../../pages/index/constants';
+import PRODUCT_PAGE from '../../pages/product/constants';
+import CustomerInputs from './customer/CustomerInputs';
+import ProductInputs from './product/ProductInputs';
 
 type Props = {
   onSearch: (value: string) => void;
   response: any;
-  actions: HeaderAction[];
   pageName: string;
   setPageLoadClicked: (value: boolean) => void;
+  onUpdate: (id: string, data: any) => void;
+  onDelete: (id: string) => void;
 };
 
 const SearchablePaginatedTable: FC<Props> = ({
   onSearch,
   response,
-  actions,
   pageName,
   setPageLoadClicked,
+  onUpdate,
+  onDelete,
 }) => {
   const [tableData, setTableData] = useState([]);
-  const [buttons, setButtons] = useState<ButtonProps[]>([]);
+  const [updateData, setUpdateData] = useState({});
+  const [updateId, setUpdateId] = useState('');
+  const [isUpdateClicked, setIsUpdateClicked] = useState(false);
   const PAGE = getPageInfo(pageName);
-  
+
   useEffect(() => {
+    if (isUpdateClicked) {
+      onUpdate(updateId, updateData);
+      setIsUpdateClicked(false);
+      setUpdateId('')
+    }
+  }, [isUpdateClicked]);
+
+  const getUpdateInputBody = (defaultValues: any) => {
+    switch (pageName) {
+      case CUSTOMER_PAGE.PAGE_NAME.VALUE:
+        return (
+          <CustomerInputs
+            isCreate={false}
+            setCustomer={setUpdateData}
+            defaultValues={defaultValues}
+          />
+        );
+      case PRODUCT_PAGE.PAGE_NAME.VALUE:
+        return (
+          <ProductInputs
+            setProduct={setUpdateData}
+            defaultValues={defaultValues}
+          />
+        );
+    }
+  };
+
+  const formatTableData = () => {
     const values = PAGE.TABLE_COLUMNS.map(({ value }) => value);
-    const data = response.data.length > response.length ? response.data.slice(0, 10) : response.data;
-    const newData = data.map((d: any) => {
+    const data =
+      response.data.length > response.length
+        ? response.data.slice(0, 10)
+        : response.data;
+    return data.map((d: any) => {
       let newObj = {};
       values.forEach(
         (key) => (newObj = Object.assign(newObj, { [key]: d[key] }))
       );
-      return newObj;
-    });
-    setTableData(newData);
-    const buttonActions = actions.map(({ name, onClick }) => {
       return {
-        loading: false,
-        testClass:
-          PAGE.ACTIONS[name as keyof Object][
-            'TEST_CLASS' as keyof Object
-          ].toString(),
-        text: PAGE.ACTIONS[name as keyof Object][
-          'TEXT' as keyof Object
-        ].toString(),
-        type: 'default',
-        onClick,
+        ...newObj,
+        actions: (
+          <TableAction
+            id={d._id}
+            updateBody={getUpdateInputBody(d)}
+            actions={{
+              delete: {
+                message: '',
+                action: () => onDelete(d._id),
+              },
+              update: {
+                isValidInput: false,
+                action: () => {
+                  setUpdateId(d._id);
+                  setIsUpdateClicked(true);
+                },
+              },
+            }}
+          />
+        ),
       };
     });
-    setButtons(buttonActions);
+  };
+
+  useEffect(() => {
+    setTableData(formatTableData());
   }, [response.data]);
 
   return (
     <>
       <SearchHeader
-        buttons={buttons}
         searchProps={{
           placeholder: PAGE.SEARCH.PLACEHOLDER,
           onSearch,

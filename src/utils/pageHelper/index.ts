@@ -18,6 +18,9 @@ export const getPageInfo = (pageName: string) => {
           CREATE: {
             TEST_CLASS: '',
             TEXT: ''
+          },
+          DELETE: {
+            MESSAGE: ''
           }
       },
       };

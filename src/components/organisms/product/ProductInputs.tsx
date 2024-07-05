@@ -5,27 +5,28 @@ import FileInput from '../../atoms/input/FileInput';
 
 type Props = {
   setProduct: (data: any) => void;
-  validate: (value: boolean) => void;
   defaultValues?: {
     name: string;
     sku: string;
     categoryTags: string[];
     description: string;
+    imageUrl: string;
   };
 };
 
-const ProductInputs: FC<Props> = ({ setProduct, validate, defaultValues }) => {
+const ProductInputs: FC<Props> = ({ setProduct, defaultValues }) => {
   const [productData, setProductData] = useState({
     name: defaultValues?.name || '',
     sku: defaultValues?.sku || '',
     categoryTags: defaultValues?.categoryTags || [],
     description: defaultValues?.description || '',
+    imageUrl: defaultValues?.imageUrl || '',
   });
+  const [file, setFile] = useState('');
 
   useEffect(() => {
     // passing to parent
-    setProduct(productData);
-    validate(productData.name !== '' && productData.sku !== '');
+    setProduct({ ...productData, file });
   }, [productData]);
 
   return (
@@ -78,7 +79,10 @@ const ProductInputs: FC<Props> = ({ setProduct, validate, defaultValues }) => {
         />
       </div>
       <div>
-        <FileInput title="Upload product image (optinal)" />
+        <FileInput
+          title="Upload product image (optinal)"
+          onChange={({ target: { files } }) => setFile(files[0])}
+        />
       </div>
     </>
   );

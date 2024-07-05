@@ -4,21 +4,21 @@ import EditIcon from '../../atoms/icon/EditIcon';
 import Modal from '../modal';
 
 type Props = {
-  id: string;
   updateBody: any;
+  id: string;
   actions: {
     delete: {
       message: string;
       action: () => void;
     };
     update: {
-      isDisabled?: boolean
+      isValidInput: boolean;
       action: () => void;
     };
   };
 };
 
-const TableAction: FC<Props> = ({ id, actions, updateBody }) => {
+const TableAction: FC<Props> = ({ updateBody, actions, id }) => {
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
 
@@ -70,7 +70,7 @@ const TableAction: FC<Props> = ({ id, actions, updateBody }) => {
         onClose={() => setOpenUpdateModal(false)}
         onYes={{
           name: 'Update',
-          isDisabled: actions.update.isDisabled,
+          isDisabled: actions.update.isValidInput,
           action: () => {
             actions.update.action();
             setOpenUpdateModal(false);

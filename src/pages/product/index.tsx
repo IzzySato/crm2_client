@@ -4,23 +4,25 @@ import SearchablePaginatedTable from '../../components/organisms/SearchablePagin
 import GeneralModal from '../../components/molecules/modal';
 import Toast from '../../components/atoms/toast';
 import { getDifferentObjectOfTwo } from '../../utils/update';
-import PRODUCT_PAGE, { PRODUCT_ACTIONS } from './constants';
+import PRODUCT_PAGE from './constants';
 import { useSelector } from 'react-redux';
 import { RootState, store } from '../../store';
 import { setProductParams } from '../../store/slices/pages/productPageSlice';
 import { ResponseProps } from '../../utils/type/response';
 import ProductInputs from '../../components/organisms/product/ProductInputs';
 import { addProduct, getProducts, updateProduct } from '../../api/product';
-import ProductTableAction from '../../components/organisms/product/table/ProductTableAction';
 import Chip from '../../components/atoms/tag/Chip';
+import { Link } from 'react-router-dom';
+import Button from '../../components/atoms/button';
 
 const ProductPage: FC = () => {
   const params = useSelector((state: RootState) => state.product.params);
   const isInitialized = useRef(false);
   const [showToast, setShowToast] = useState(false);
-  const [isValidData, setIsVaildData] = useState(false);
-  const [product, setProduct] = useState({
+  const [newProduct, setNewProduct] = useState({
+    name: '',
     _id: '',
+    file: '',
   });
   const [pageLoadClicked, setPageLoadClicked] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
@@ -31,60 +33,63 @@ const ProductPage: FC = () => {
     length: 10,
     data: [],
   });
-  const [updateTable, setUpdateTable] = useState('');
-  const [newUpdatedProduct, setNewUpdatedProduct] = useState({});
+  const [updateData, setUpdateData] = useState({
+    originalData: { _id: '' },
+    newData: { name: '' },
+  });
+  const [deleteId, setDeleteId] = useState('');
+
+  const formatProductData = (data: any) => {
+    return data?.map((p: any) => ({
+      ...p,
+      _id: (
+        <Link key={p._id} to={`/product/${p._id}`}>
+          {p._id}
+        </Link>
+      ),
+      categoryTags: p.categoryTags.map((tag: string) => (
+        <Chip name={tag} readonly />
+      )),
+    }));
+  };
 
   const createProduct = async () => {
     const {
       data: { data },
-    } = await addProduct(product);
-    const newProductData = [...productResponse.data, data[0]];
+    } = await addProduct(newProduct);
+    const newProductData = formatProductData([
+      ...productResponse.data,
+      data[0],
+    ]);
     setProductResponse({
       ...productResponse,
       total: productResponse.total + 1,
-      data: newProductData });
+      data: newProductData,
+    });
     setOpenCreateModal(false);
+    setNewProduct({
+      name: '',
+      _id: '',
+      file: '',
+    });
     setToastMessage('Product Created');
     setShowToast(true);
   };
 
-  const addActionColumn = (data: any) => {
-    return data?.map((p: any) => ({
-      ...p,
-      categoryTags: p.categoryTags.map((tag: string) => (
-        <Chip name={tag} readonly />
-      )),
-      actions: (
-        <ProductTableAction
-          data={p}
-          actions={{
-            update: ({ originalData, newUpdatedData }) => {
-              setProduct(originalData);
-              setNewUpdatedProduct(newUpdatedData);
-              setUpdateTable(PRODUCT_ACTIONS.UPDATE);
-            },
-            delete: (data) => {
-              setProduct(data);
-              setUpdateTable(PRODUCT_ACTIONS.DELETE);
-            },
-          }}
-        />
-      ),
-    }));
-  };
-
   const editProduct = async () => {
     const productDifference = getDifferentObjectOfTwo(
-      product,
-      newUpdatedProduct
+      updateData.originalData,
+      updateData.newData
     );
     if (productDifference && Object.keys(productDifference).length > 0) {
-      await updateProduct(product._id, productDifference);
+      await updateProduct(updateData.originalData._id, productDifference);
       setToastMessage('Product Updated');
-      const updatedData = productResponse.data.map((p) =>
-        p._id === product._id ? { _id: product._id, ...newUpdatedProduct } : p
+      const updated = productResponse.data.map((p) =>
+        p._id === updateData.originalData._id
+          ? { _id: updateData.originalData._id, ...updateData.newData }
+          : p
       );
-      const updatedTable = addActionColumn(updatedData);
+      const updatedTable = formatProductData(updated);
       setProductResponse({ ...productResponse, data: updatedTable });
     }
   };
@@ -92,7 +97,7 @@ const ProductPage: FC = () => {
   const loadProductData = async () => {
     const { data } = await getProducts(params);
     if (data.data.length > 0) {
-      const addedActionData = addActionColumn(data.data);
+      const addedActionData = formatProductData(data.data);
       setProductResponse({ ...data, data: addedActionData });
     }
     setPageLoadClicked(false);
@@ -100,14 +105,8 @@ const ProductPage: FC = () => {
 
   const deleteProduct = async () => {
     const today = new Date();
-    await updateProduct(product._id, { deletedAt: today });
-    const filteredProducts = productResponse.data.filter(
-      ({ _id }) => product._id !== _id
-    );
-    setProductResponse({ 
-      ...productResponse,
-      total: productResponse.total === 0 ? 0 : productResponse.total - 1,
-      data: filteredProducts });
+    await updateProduct(deleteId, { deletedAt: today });
+    await loadProductData();
     setToastMessage('Product Deleted');
     setShowToast(true);
   };
@@ -122,18 +121,23 @@ const ProductPage: FC = () => {
     }
   }, [pageLoadClicked]);
 
-  // Update Delete Product
   useEffect(() => {
     (async () => {
-      if (updateTable === PRODUCT_ACTIONS.UPDATE) {
+      if (updateData.originalData._id !== '') {
         await editProduct();
+        setUpdateData({ originalData: { _id: '' }, newData: { name: '' } });
       }
-      if (updateTable === PRODUCT_ACTIONS.DELETE) {
-        await deleteProduct();
-      }
-      setUpdateTable('');
     })();
-  }, [updateTable]);
+  }, [updateData]);
+
+  useEffect(() => {
+    (async () => {
+      if (deleteId !== '') {
+        await deleteProduct();
+        setDeleteId('');
+      }
+    })();
+  }, [deleteId]);
 
   return (
     <>
@@ -144,6 +148,13 @@ const ProductPage: FC = () => {
         message={toastMessage}
         setDisplay={setShowToast}
       />
+      <div className="page-px mt-3">
+        <Button
+          type="default"
+          text="Create"
+          onClick={() => setOpenCreateModal(true)}
+        />
+      </div>
       <SearchablePaginatedTable
         pageName={PRODUCT_PAGE.PAGE_NAME.VALUE}
         onSearch={async (value) => {
@@ -151,29 +162,20 @@ const ProductPage: FC = () => {
           await loadProductData();
         }}
         response={productResponse}
-        actions={[
-          {
-            name: PRODUCT_PAGE.ACTIONS.CREATE.NAME,
-            onClick: () => setOpenCreateModal(true),
-          },
-        ]}
         setPageLoadClicked={setPageLoadClicked}
+        onDelete={(id) => console.log(id)}
+        onUpdate={(id, data) => console.log(id, data)}
       />
       {/* Create Modal */}
       <GeneralModal
         title="Create Product"
         testClass="createProductModal"
         isDisplay={openCreateModal}
-        body={
-          <ProductInputs
-            setProduct={setProduct}
-            validate={(value) => setIsVaildData(value)}
-          />
-        }
+        body={<ProductInputs setProduct={() => {}} />}
         onClose={() => setOpenCreateModal(false)}
         onYes={{
           name: 'Create',
-          isDisabled: !isValidData,
+          isDisabled: newProduct.name !== '',
           action: async () => await createProduct(),
         }}
         onNo={{ name: 'Cancel', action: () => setOpenCreateModal(false) }}

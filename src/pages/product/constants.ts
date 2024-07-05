@@ -39,16 +39,14 @@ const PAGE = {
         TEST_CLASS: 'createProductModal',
       },
     },
+    DELETE: {
+      MESSAGE: 'Delete Product Id:'
+    }
   },
   SEARCH: {
     TEST_CLASS: 'productSearch',
     PLACEHOLDER: 'Search Product (e.g. product name, sku, tags )',
   },
-};
-
-export const PRODUCT_ACTIONS = {
-  UPDATE: 'update',
-  DELETE: 'delete',
 };
 
 export default PAGE;

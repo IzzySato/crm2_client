@@ -3,6 +3,7 @@ import Login from '../pages/login';
 import LoginFailed from '../pages/login/loginFailed';
 import PageNotFound from '../pages/pageNotFound';
 import ProductPage from '../pages/product';
+import ProductDetail from '../pages/product/detail';
 
 export const routers = [
   {
@@ -15,6 +16,12 @@ export const routers = [
     name: 'product',
     path: '/product',
     element: ProductPage,
+    protectedRoute: true,
+  },
+  {
+    name: 'productDetail',
+    path: '/product/:id',
+    element: ProductDetail,
     protectedRoute: true,
   },
   {

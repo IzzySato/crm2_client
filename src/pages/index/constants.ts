@@ -43,12 +43,10 @@ const PAGE = {
         TEST_CLASS: 'createCustomerModal',
       },
     },
+    DELETE: {
+      MESSAGE: 'Delete Customer Id:'
+    }
   }
 }
-
-export const CUSTOMER_ACTIONS = {
-  UPDATE: 'update',
-  DELETE: 'delete',
-};
 
 export default PAGE;

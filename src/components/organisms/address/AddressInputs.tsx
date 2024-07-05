@@ -6,19 +6,18 @@ import { PROVINCES } from './constants';
 
 type InputFieldProps = {
   setAddress: (data: any) => void;
-  loadedAddress: (data: any) => void
   addressIds: string[];
   isCreate?: boolean;
 };
 
 const AddressInputs: FC<InputFieldProps> = ({
   isCreate = true,
-  loadedAddress,
   addressIds,
   setAddress,
 }) => {
 
   const [addressData, setAddressData] = useState({
+    _id: '',
     line1: '',
     line2: '',
     city: '',
@@ -36,10 +35,9 @@ const AddressInputs: FC<InputFieldProps> = ({
     (async () => {
       if (!isCreate && addressIds[0]) {
         const { data } = await getAddressById(addressIds[0]);
-        // passing to parent
-        loadedAddress(data);
         if (data) {
           setAddressData({
+            _id: data._id,
             line1: data.line1,
             line2: data.line2,
             city: data.city,

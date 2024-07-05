@@ -6,9 +6,6 @@ import { validateEmail } from '../../../utils/validate/inputValidation';
 type Props = {
   isCreate?: boolean;
   setCustomer: (data: any) => void;
-  setAddress: (data: any) => void;
-  validate: (value: boolean) => void;
-  loadedAddress?: (data: any) => void;
   defaultValues?: {
     firstName: string;
     lastName: string;
@@ -21,10 +18,7 @@ type Props = {
 const CustomerInputs: FC<Props> = ({
   isCreate = true,
   defaultValues,
-  validate,
   setCustomer,
-  setAddress,
-  loadedAddress = () => {},
 }) => {
   const [customerData, setCustomerData] = useState({
     firstName: defaultValues?.firstName || '',
@@ -33,14 +27,39 @@ const CustomerInputs: FC<Props> = ({
     phone: defaultValues?.phone || '',
   });
 
+  const [address, setAddress] = useState({
+    _id: '',
+    line1: '',
+    line2: '',
+    city: '',
+    province: '',
+    postcode: '',
+  });
+
   useEffect(() => {
     // passing to parent
-    setCustomer(customerData);
-    validate(customerData.firstName !== '' &&
-    customerData.lastName !== '' &&
-    customerData.email !== '' &&
-    validateEmail(customerData.email) !== null);
-  }, [setCustomer, customerData]);
+    let addressData = null;
+    if (
+      address.line1 !== '' ||
+      address.city !== '' ||
+      address.province !== '' ||
+      address.postcode !== ''
+    ) {
+      addressData = {
+        line1: address.line1,
+        line2: address.line2,
+        city: address.city,
+        province: address.province,
+        postcode: address.postcode,
+      };
+    }
+    if (address._id !== '') {
+      addressData = {
+        ...addressData, _id: address._id
+      }
+    }
+    setCustomer({ ...customerData, address: addressData });
+  }, [customerData, address]);
 
   return (
     <>
@@ -102,8 +121,7 @@ const CustomerInputs: FC<Props> = ({
       <div className="mb-2">
         <AddressInputs
           isCreate={isCreate}
-          loadedAddress={loadedAddress}
-          setAddress={setAddress}
+          setAddress={(data) => setAddress(data)}
           addressIds={defaultValues?.addresses}
         />
       </div>
