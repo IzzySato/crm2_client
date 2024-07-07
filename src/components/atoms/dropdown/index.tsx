@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import Button from '../button';
+import Button, { ButtonType } from '../button';
 import { IoMdArrowDropdown } from 'react-icons/io';
 
 type Props = {
@@ -16,7 +16,7 @@ const DropDown: FC<Props> = ({ name, data, setSelect }) => {
       <Button
         icon={<IoMdArrowDropdown />}
         text={name}
-        type='secondary'
+        type={ButtonType.Secondary}
         onClick={() => setShowOptions(!showOptions)}
       />
       <div

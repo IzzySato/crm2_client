@@ -46,15 +46,15 @@ const ProductDetail: FC = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row -mx-4">
             <div className="md:flex-1 px-4">
-              <div className="h-[460px] rounded-lg bg-gray-300 dark:bg-gray-700 mb-4">
-                {productData.imageUrl !== '' && (
+              {productData.imageUrl !== '' && (
+                <div className="h-[460px] rounded-lg dark:bg-gray-700 mb-4">
                   <Image
                     className="w-full h-full object-cover"
                     src={productData.imageUrl}
                     alt="product image"
                   />
-                )}
-              </div>
+                </div>
+              )}
             </div>
             <div className="md:flex-1 px-4">
               <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">

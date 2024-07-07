@@ -7,26 +7,32 @@ const PAGE = {
     {
       name: 'ID',
       value: '_id',
+      customClass: '',
     },
     {
       name: 'Name',
       value: 'name',
+      customClass: '',
     },
     {
       name: 'SKU',
       value: 'sku',
+      customClass: '',
     },
     {
       name: 'Category Tags',
       value: 'categoryTags',
+      customClass: 'hidden lg:table-cell',
     },
     {
       name: 'Description',
       value: 'description',
+      customClass: 'hidden lg:table-cell',
     },
     {
       name: 'Actions',
       value: 'actions',
+      customClass: ''
     },
   ],
   ACTIONS: {

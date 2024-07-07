@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import CloseButton from '../../atoms/button/CloseButton';
-import Button from '../../atoms/button';
+import Button, { ButtonType } from '../../atoms/button';
 
 type Props = {
   title: string;
@@ -56,14 +56,14 @@ const GeneralModal: FC<Props> = ({
                   loading={false}
                   isDisabled={onYes.isDisabled}
                   text={onYes.name}
-                  type={'default'}
+                  type={ButtonType.Default}
                   onClick={onYes.action}
                 />
                 <div className="ml-3">
                   <Button
                     loading={false}
                     text={onNo.name || 'Cancel'}
-                    type={'cancel'}
+                    type={ButtonType.Cancel}
                     onClick={onNo.action}
                   />
                 </div>

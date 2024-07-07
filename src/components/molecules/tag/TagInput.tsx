@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from 'react';
 import Chip from '../../atoms/tag/Chip';
-import Button from '../../atoms/button';
+import Button, { ButtonType } from '../../atoms/button';
 import Input from '../../atoms/input';
 
 type TagInputProps = {
@@ -25,12 +25,12 @@ const TagInput: FC<TagInputProps> = ({
 
   return (
     <div className="flex flex-col items-center h-min bg-gray-30">
-      <div className="w-full p-4 items-center bg-white rounded-2xl shadow-xl overflow-hidden sm:max-w-4xl hover:shadow-xl dark:bg-gray-500">
+      <div className="w-full p-4 items-center rounded-2xl shadow-xl overflow-hidden sm:max-w-4xl hover:shadow-xl dark:bg-gray-500">
         <div className="mt-2">
           <div className="flex flex-col items-center mt-1 text-sm sm:flex-row sm:space-y-0 sm:space-x-4">
             <div className="w-full sm:mb-2">
               <label>
-                <span className="ml-2 text-sm text-gray-800 sm:text-base dark:text-gray-200">
+                <span className="ml-2 text-sm sm:text-base dark:text-gray-200">
                   {title}
                 </span>
                 <div className="py-3">
@@ -42,9 +42,9 @@ const TagInput: FC<TagInputProps> = ({
                 </div>
               </label>
             </div>
-            <div className="py-3 pt-7">
+            <div className="py-3 pt-0 w-full sm:pt-7 sm:w-16">
               <Button
-                type="secondary"
+                type={ButtonType.Secondary}
                 isDisabled={newTagName === ''}
                 text="Add"
                 onClick={() => {
@@ -69,7 +69,7 @@ const TagInput: FC<TagInputProps> = ({
             ))}
         </div>
         <div>
-          <Button text="Apply" type="default" onClick={() => onApply(tags)} />
+          <Button text="Apply" type={ButtonType.Default} onClick={() => onApply(tags)} />
         </div>
       </div>
     </div>

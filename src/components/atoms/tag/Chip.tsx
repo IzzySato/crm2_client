@@ -25,7 +25,6 @@ const Chip: FC<ChipProps> = ({
           <Button
             icon={<CloseCircleIcon />}
             onClick={onDelete}
-            type="noStyled"
           />
         </span>
       )}

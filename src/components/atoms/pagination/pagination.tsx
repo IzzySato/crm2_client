@@ -86,7 +86,6 @@ const Pagination: FC<pagenationProps> = ({
             <Button
               text={text}
               isDisabled={getPageParams().pageNum === parseInt(text)}
-              type="noStyled"
               onClick={() => {
                 if (text !== '...') {
                   setPageNumParams(text);
@@ -161,7 +160,6 @@ const Pagination: FC<pagenationProps> = ({
           >
             <div className="relative inline-flex p-1 items-center rounded-l-md ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0">
               <Button
-                type={'noStyled'}
                 icon={<PreviousIcon />}
                 isDisabled={getPageParams().pageNum === 1}
                 onClick={() => {
@@ -175,7 +173,6 @@ const Pagination: FC<pagenationProps> = ({
             {getPageSection()}
             <div className="relative inline-flex items-center p-1 rounded-r-md ring-1 ring-inset ring-gray-300 focus:z-20 focus:outline-offset-0">
               <Button
-                type="noStyled"
                 isDisabled={getPageParams().pageNum === totalPages}
                 icon={<NextIcon />}
                 onClick={() => {

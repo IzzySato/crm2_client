@@ -12,7 +12,7 @@ import { RootState, store } from '../../store';
 import { setCustomerParams } from '../../store/slices/pages/customerPageSlice';
 import { ResponseProps } from '../../utils/type/response';
 import { validateEmail } from '../../utils/validate/inputValidation';
-import Button from '../../components/atoms/button';
+import Button, { ButtonType } from '../../components/atoms/button';
 
 const CustomerPage: FC = () => {
   const params = useSelector((state: RootState) => state.customer.params);
@@ -142,7 +142,7 @@ const CustomerPage: FC = () => {
       />
       <div className="page-px mt-3">
         <Button
-          type="default"
+          type={ButtonType.Default}
           text="Create"
           onClick={() => setOpenCreateModal(true)}
         />

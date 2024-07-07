@@ -1,22 +1,33 @@
-import { FC } from 'react';
+import { FC, useState, useEffect } from 'react';
 
 export type TableProps = {
   columns: {
     name: string;
     value: string;
+    customClass: string,
   }[];
   data: any;
 };
 
 const Table: FC<TableProps> = ({ columns, data }) => {
+  const [customClass, setCustomClass] = useState({});
+
+  useEffect(() => {
+    const obj: any = {};
+    columns.forEach(({ value, customClass }) => {
+        obj[value] = customClass;
+    });
+    setCustomClass(obj);
+  }, [columns, data]);
+
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-6 m-5">
-      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <table className="min-w-full text-sm text-left rtl:text-right dark:text-gray-400">
+        <thead className="text-xs uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
             {columns &&
-              columns.map(({ name, value }) => (
-                <th scope="col" className="px-6 py-3" key={value}>
+              columns.map(({ name, value, customClass }) => (
+                <th scope="col" className={`px-6 py-3 ${customClass}`} key={value}>
                   {name}
                 </th>
               ))}
@@ -31,7 +42,7 @@ const Table: FC<TableProps> = ({ columns, data }) => {
               >
                 {Object.keys(d).map((key: any) => (
                   <td
-                    className="border border-slate-700 px-6 py-4 sm:justify-center"
+                    className={`border border-slate-700 px-6 py-4 sm:justify-center ${customClass[key as keyof Object]}`}
                     key={`${key}_${d[key]}`}
                   >
                     {d[key]}

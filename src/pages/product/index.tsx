@@ -12,7 +12,7 @@ import ProductInputs from '../../components/organisms/product/ProductInputs';
 import { addProduct, getProducts, updateProduct } from '../../api/product';
 import Chip from '../../components/atoms/tag/Chip';
 import { Link } from 'react-router-dom';
-import Button from '../../components/atoms/button';
+import Button, { ButtonType } from '../../components/atoms/button';
 
 const ProductPage: FC = () => {
   const params = useSelector((state: RootState) => state.product.params);
@@ -121,7 +121,7 @@ const ProductPage: FC = () => {
       />
       <div className="page-px mt-3">
         <Button
-          type="default"
+          type={ButtonType.Default}
           text="Create"
           onClick={() => setOpenCreateModal(true)}
         />
