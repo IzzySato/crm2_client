@@ -3,6 +3,7 @@ import Input from '../../atoms/input';
 import DropDown from '../../atoms/dropdown';
 import { getAddressById } from '../../../api/address';
 import { PROVINCES } from './constants';
+import { getUpdatedObject } from '../../../utils/update';
 
 type InputFieldProps = {
   setAddress: (data: any) => void;
@@ -15,8 +16,16 @@ const AddressInputs: FC<InputFieldProps> = ({
   addressIds,
   setAddress,
 }) => {
-
   const [addressData, setAddressData] = useState({
+    _id: '',
+    line1: '',
+    line2: '',
+    city: '',
+    province: '',
+    postcode: '',
+  });
+
+  const [oldAddressData, setOldAddressData] = useState({
     _id: '',
     line1: '',
     line2: '',
@@ -28,7 +37,9 @@ const AddressInputs: FC<InputFieldProps> = ({
   const [selectedProvince, setSelectedProvince] = useState('Provinces');
 
   useEffect(() => {
-    setAddress(addressData);
+    const keys = ['line1', 'line2', 'city', 'province', 'postcode'];
+    const address = getUpdatedObject(keys, oldAddressData, addressData);
+    setAddress(address);
   }, [addressData]);
 
   useEffect(() => {
@@ -36,6 +47,7 @@ const AddressInputs: FC<InputFieldProps> = ({
       if (!isCreate && addressIds[0]) {
         const { data } = await getAddressById(addressIds[0]);
         if (data) {
+          setOldAddressData({ ...data });
           setAddressData({
             _id: data._id,
             line1: data.line1,

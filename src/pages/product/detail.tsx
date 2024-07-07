@@ -1,9 +1,10 @@
 import { FC, useEffect, useState } from 'react';
-import { getProductById } from '../../api/product';
+import { getProductById, updateProduct } from '../../api/product';
 import TagInput from '../../components/molecules/tag/TagInput';
 import Image from '../../components/atoms/image';
 import Navbar from '../../components/organisms/Navbar';
 import { useParams } from 'react-router-dom';
+import Toast from '../../components/atoms/toast';
 
 const ProductDetail: FC = () => {
   const { id = '' } = useParams();
@@ -14,20 +15,33 @@ const ProductDetail: FC = () => {
     categoryTags: [],
     description: '',
   });
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState<any>([]);
+  const [toastMessage, setToastMessage] = useState('');
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     (async () => {
       const { data } = await getProductById(id);
-      console.log('data', data);
       setTags(data.categoryTags);
       setProductData(data);
     })();
   }, [id]);
 
+  const updateCategoryTag = async (value: string[]) => {
+    await updateProduct(id, { categoryTags: value });
+    setShowToast(true);
+    setToastMessage('Successfully updated category tags');
+  };
+
   return (
     <>
       <Navbar />
+      <Toast
+        status="success"
+        isDisplay={showToast}
+        message={toastMessage}
+        setDisplay={setShowToast}
+      />
       <div className="pt-5 dark:bg-gray-900 py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row -mx-4">
@@ -61,9 +75,9 @@ const ProductDetail: FC = () => {
               </div>
               <div className="mb-4">
                 <TagInput
-                  title={'Category Tags'}
+                  title="Category Tags"
                   assignedTags={tags}
-                  setParentTag={(value) => console.log(value)}
+                  onApply={async (value) => await updateCategoryTag(value)}
                 />
               </div>
             </div>

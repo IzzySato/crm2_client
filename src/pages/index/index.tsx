@@ -6,7 +6,6 @@ import GeneralModal from '../../components/molecules/modal';
 import CustomerInputs from '../../components/organisms/customer/CustomerInputs';
 import { addAddress, updateAddress } from '../../api/address';
 import Toast from '../../components/atoms/toast';
-import { getDifferentObjectOfTwo } from '../../utils/update';
 import CUSTOMER_PAGE from './constants';
 import { useSelector } from 'react-redux';
 import { RootState, store } from '../../store';
@@ -65,40 +64,45 @@ const CustomerPage: FC = () => {
 
   const editCustomer = async (id: string, newData: any) => {
     const originalCustomerData = response.data.find(({ _id }) => _id === id);
-    const addressId = await editAddress(originalCustomerData, newData);
-    const customerDifference = getDifferentObjectOfTwo(
-      originalCustomerData,
-      newData
-    );
-    if (!addressId && Object.keys(customerDifference).length === 0) {
+    const addressId = await editAddress(newData.address);
+    if (Object.keys(newData).length === 0) {
       return;
     }
-    await updateCustomer(id, {
-      ...customerDifference,
-      addressIds: [addressId] || [],
-    });
+    if (addressId) {
+      newData.addressIds = [addressId];
+    }
+    delete newData.address;
+    await updateCustomer(id, newData);
     setToastMessage('Customer Updated');
     const updatedData = response.data.map((c) =>
-      c._id === id ? { _id: id, ...newData, addressIds: [addressId] || [] } : c
+      c._id === id
+        ? {
+            _id: id,
+            ...newData,
+            addresses: newData.addressIds || c.addresses,
+          }
+        : c
     );
     setResponse({ ...response, data: updatedData });
   };
 
-  const editAddress = async (originalCustomerData: any, newData: any) => {
-    const addressDifference = getDifferentObjectOfTwo(
-      originalCustomerData.address,
-      newData.address
-    );
-    if (Object.keys(addressDifference).length === 0) {
-      return;
+  const editAddress = async (newAddressData: any) => {
+    if (Object.keys(newAddressData).length === 0) {
+      return null;
     }
-    if (newData.address._id) {
+    if (newAddressData._id) {
+      const id = newAddressData._id;
+      delete newAddressData._id;
       // Update the address
-      await updateAddress(newData._id, addressDifference);
-      setToastMessage('Customer Updated');
+      await updateAddress(id, newAddressData);
+      setToastMessage('Address Updated');
+      setShowToast(true);
+      return null;
     } else {
       // add a new address and return address id
-      const { data } = await addAddress(newData.address);
+      const { data } = await addAddress(newAddressData);
+      setToastMessage('Address Created');
+      setShowToast(true);
       return data[0]._id;
     }
   };
@@ -136,7 +140,7 @@ const CustomerPage: FC = () => {
         message={toastMessage}
         setDisplay={setShowToast}
       />
-      <div className='page-px mt-3'>
+      <div className="page-px mt-3">
         <Button
           type="default"
           text="Create"

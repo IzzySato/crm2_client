@@ -24,9 +24,9 @@ const Table: FC<TableProps> = ({ columns, data }) => {
         </thead>
         <tbody>
           {data &&
-            data.map((d: any) => (
+            data.map((d: any, index: number) => (
               <tr
-                key={d._id}
+                key={index}
                 className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
               >
                 {Object.keys(d).map((key: any) => (

@@ -15,8 +15,8 @@ type Props = {
   response: any;
   pageName: string;
   setPageLoadClicked: (value: boolean) => void;
-  onUpdate: (id: string, data: any) => void;
-  onDelete: (id: string) => void;
+  onUpdate: (id: any, data: any) => void;
+  onDelete: (id: any) => void;
 };
 
 const SearchablePaginatedTable: FC<Props> = ({
@@ -80,8 +80,8 @@ const SearchablePaginatedTable: FC<Props> = ({
             updateBody={getUpdateInputBody(d)}
             actions={{
               delete: {
-                message: '',
-                action: () => onDelete(d._id),
+                message: PAGE.ACTIONS.DELETE.MESSAGE,
+                action: () => onDelete(d._id)
               },
               update: {
                 isValidInput: false,

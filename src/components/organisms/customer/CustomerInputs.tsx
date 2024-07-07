@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import AddressInputs from '../address/AddressInputs';
 import InputField from '../../molecules/inputField/InputField';
 import { validateEmail } from '../../../utils/validate/inputValidation';
+import { getUpdatedObject } from '../../../utils/update';
 
 type Props = {
   isCreate?: boolean;
@@ -27,38 +28,13 @@ const CustomerInputs: FC<Props> = ({
     phone: defaultValues?.phone || '',
   });
 
-  const [address, setAddress] = useState({
-    _id: '',
-    line1: '',
-    line2: '',
-    city: '',
-    province: '',
-    postcode: '',
-  });
+  const [address, setAddress] = useState({});
 
   useEffect(() => {
     // passing to parent
-    let addressData = null;
-    if (
-      address.line1 !== '' ||
-      address.city !== '' ||
-      address.province !== '' ||
-      address.postcode !== ''
-    ) {
-      addressData = {
-        line1: address.line1,
-        line2: address.line2,
-        city: address.city,
-        province: address.province,
-        postcode: address.postcode,
-      };
-    }
-    if (address._id !== '') {
-      addressData = {
-        ...addressData, _id: address._id
-      }
-    }
-    setCustomer({ ...customerData, address: addressData });
+    const keys = ['firstName', 'lastName', 'email', 'phone'];
+    const customer = getUpdatedObject(keys, defaultValues, customerData );
+    setCustomer({ ...customer, address });
   }, [customerData, address]);
 
   return (

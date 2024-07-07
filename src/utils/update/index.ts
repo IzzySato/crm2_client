@@ -1,20 +1,14 @@
-
 /**
- * e.g. originalData { firstName: 'izzy', email: 'izzy@mail'}
- * newData { firstName: 'izzy', email: 'test@mail'}
- * return { email: 'test@mail' }
- * @param newData object of data
- * @param originalData object of data
- * @returns different object of newData
+ * @param keys e.g. ['line1', 'line2', 'city']
+ * @param originalData Object
+ * @param newData Object
+ * @returns newData value if different value from originalData
  */
-export const getDifferentObjectOfTwo = (originalData: any, newData: any) => {
-  let result = {};
-  Object.keys(originalData).forEach((key) => {
-    if (
-      newData[key as keyof Object] &&
-      newData[key as keyof Object] !== originalData[key]
-    ) {
-      result = Object.assign(result, { [key]: newData[key as keyof Object] });
+export const getUpdatedObject = (keys: string[], originalData: any, newData: any) => {
+  const result: any = {};
+  keys.forEach((key) => {
+    if (originalData[key as keyof Object] !== newData[key as keyof Object]) {
+      result[key] = newData[key as keyof Object];
     }
   });
   return result;

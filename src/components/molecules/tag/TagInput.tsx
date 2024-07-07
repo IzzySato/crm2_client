@@ -7,11 +7,11 @@ type TagInputProps = {
   title: string;
   placeholder?: string;
   assignedTags: string[];
-  setParentTag: (value: string[]) => void
+  onApply: (values: string[]) => void;
 };
 
 const TagInput: FC<TagInputProps> = ({
-  setParentTag,
+  onApply,
   title,
   assignedTags,
   placeholder = '',
@@ -21,16 +21,12 @@ const TagInput: FC<TagInputProps> = ({
 
   useEffect(() => {
     setTags(assignedTags);
-  }, []);
-
-  useEffect(() => {
-    setParentTag(tags);
-  }, [tags]);
+  }, [assignedTags]);
 
   return (
     <div className="flex flex-col items-center h-min bg-gray-30">
       <div className="w-full p-4 items-center bg-white rounded-2xl shadow-xl overflow-hidden sm:max-w-4xl hover:shadow-xl dark:bg-gray-500">
-        <form action="#" className="mt-2">
+        <div className="mt-2">
           <div className="flex flex-col items-center mt-1 text-sm sm:flex-row sm:space-y-0 sm:space-x-4">
             <div className="w-full sm:mb-2">
               <label>
@@ -46,9 +42,10 @@ const TagInput: FC<TagInputProps> = ({
                 </div>
               </label>
             </div>
-            <div className="py-3">
+            <div className="py-3 pt-7">
               <Button
                 type="secondary"
+                isDisabled={newTagName === ''}
                 text="Add"
                 onClick={() => {
                   setTags([...tags, newTagName]);
@@ -57,12 +54,12 @@ const TagInput: FC<TagInputProps> = ({
               />
             </div>
           </div>
-        </form>
+        </div>
         <div className="px-2 pt-2 pb-11 mb-3 flex flex-wrap rounded-lg bg-purple-200 dark:bg-gray-400">
           {tags.length > 0 &&
-            tags.map((tag) => (
+            tags.map((tag, index) => (
               <Chip
-                key={tag}
+                key={`${tag}_${index}`}
                 name={tag}
                 onDelete={() => {
                   const filteredTags = tags.filter((t) => tag !== t);
@@ -70,6 +67,9 @@ const TagInput: FC<TagInputProps> = ({
                 }}
               />
             ))}
+        </div>
+        <div>
+          <Button text="Apply" type="default" onClick={() => onApply(tags)} />
         </div>
       </div>
     </div>

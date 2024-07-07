@@ -2,10 +2,12 @@ import { FC, useEffect, useState } from 'react';
 import InputField from '../../molecules/inputField/InputField';
 import TagInput from '../../molecules/tag/TagInput';
 import FileInput from '../../atoms/input/FileInput';
+import { getUpdatedObject } from '../../../utils/update';
 
 type Props = {
   setProduct: (data: any) => void;
   defaultValues?: {
+    _id: string;
     name: string;
     sku: string;
     categoryTags: string[];
@@ -22,12 +24,21 @@ const ProductInputs: FC<Props> = ({ setProduct, defaultValues }) => {
     description: defaultValues?.description || '',
     imageUrl: defaultValues?.imageUrl || '',
   });
-  const [file, setFile] = useState('');
+  const [file, setFile] = useState(undefined);
 
   useEffect(() => {
     // passing to parent
-    setProduct({ ...productData, file });
-  }, [productData]);
+    if (productData.name !== '' && productData.sku !== '') {
+      const keys = ['name', 'sku', 'categoryTags', 'description'];
+      const product = defaultValues
+        ? getUpdatedObject(keys, defaultValues, productData)
+        : productData;
+      if (file) {
+        product.file = file;
+      }
+      setProduct(product);
+    }
+  }, [productData, file]);
 
   return (
     <>
@@ -47,9 +58,11 @@ const ProductInputs: FC<Props> = ({ setProduct, defaultValues }) => {
       </div>
       <div className="mb-2">
         <InputField
+          error={productData.sku === '' ? 'Product sku is required' : ''}
           inputProps={{
             value: productData.sku,
             label: 'SKU',
+            isRequired: true,
             placeholder: 'rg-1234tyyessop',
             onChange: ({ target: { value } }) => {
               setProductData({ ...productData, sku: value });
@@ -73,7 +86,7 @@ const ProductInputs: FC<Props> = ({ setProduct, defaultValues }) => {
         <TagInput
           title="Category Tag"
           assignedTags={productData.categoryTags}
-          setParentTag={(value) =>
+          onApply={(value) =>
             setProductData({ ...productData, categoryTags: value })
           }
         />
