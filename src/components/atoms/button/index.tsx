@@ -66,7 +66,7 @@ const Button: FC<ButtonProps> = ({
       className={getClasses()}
     >
       {loading === true ? <LoadingIcon /> : <p>{text}</p>}
-      {<div className="text-xl">{icon}</div>}
+      {<div className="text-xl pl-3">{icon}</div>}
     </button>
   );
 };

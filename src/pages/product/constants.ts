@@ -7,7 +7,7 @@ const PAGE = {
     {
       name: 'ID',
       value: '_id',
-      customClass: '',
+      customClass: 'hidden lg:table-cell',
     },
     {
       name: 'Name',
@@ -51,7 +51,7 @@ const PAGE = {
   },
   SEARCH: {
     TEST_CLASS: 'productSearch',
-    PLACEHOLDER: 'Search Product (e.g. product name, sku, tags )',
+    PLACEHOLDER: 'Search (e.g. product name, sku, tags )',
   },
 };
 

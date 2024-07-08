@@ -1,56 +1,52 @@
-import { Fragment } from 'react';
+import { Fragment, FC } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { classNames } from '../../utils/css';
 import MobileBarIcon from '../atoms/icon/nav/MobileMenuIcon';
 import MobileCloseIcon from '../atoms/icon/nav/MobileCloseIcon';
-import NotificationIcon from '../atoms/icon/NotificationIcon';
 import ConfigIcon from '../atoms/icon/ConfigIcon';
 
+type Props = {
+  current: string;
+}
+
+export enum PAGE_NAME {
+  CUSTOMER = 'customer',
+  PRODUCT = 'product'
+};
+
 const navigation = [
-  { name: 'Customers', href: '/', current: true },
-  { name: 'Works', href: '#', current: false },
-  { name: 'Products', href: '/product', current: false },
+  { name: 'Customers', value: PAGE_NAME.CUSTOMER, href: '/' },
+  { name: 'Products', value: PAGE_NAME.PRODUCT, href: '/product' },
 ];
 
-const memuItems = [
-  { name: 'Users', href: '', active: true },
-  { name: 'Invitation', href: '', active: false },
-  { name: 'Logout', href: '', active: false },
-];
+const memuItems = [{ name: 'Logout', href: ''}];
 
-export default function Navbar() {
+const Navbar: FC<Props> = ({ current }) => {
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-            <div className="relative flex h-16 items-center justify-between">
-              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+            <div className="relative flex items-center justify-between">
+              <div className="flex items-center sm:hidden">
                 {/* Mobile menu button*/}
-                <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-                  <span className="absolute -inset-0.5" />
-                  <span className="sr-only">Open main menu</span>
-                  {open ? (
-                    <MobileCloseIcon />
-                  ) : (
-                    <MobileBarIcon />
-                  )}
+                <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-3 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none">
+                  {open ? <MobileCloseIcon /> : <MobileBarIcon />}
                 </Disclosure.Button>
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="hidden sm:ml-6 sm:block">
-                  <div className="navList flex space-x-4">
+                  <div className="navList flex">
                     {navigation.map((item) => (
                       <a
                         key={item.name}
                         href={item.href}
                         className={classNames(
-                          item.current
-                            ? 'bg-gray-900 text-white'
+                          item.value === current 
+                            ? 'bg-gray-900 text-white hover:cursor-text'
                             : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                          'rounded-md px-3 py-2 text-sm font-medium'
+                          'rounded-md text-sm font-medium py-4 px-3'
                         )}
-                        aria-current={item.current ? 'page' : undefined}
                       >
                         {item.name}
                       </a>
@@ -59,19 +55,9 @@ export default function Navbar() {
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <button
-                  type="button"
-                  className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                >
-                  <span className="absolute -inset-1.5" />
-                  <span className="sr-only">View notifications</span>
-                  <NotificationIcon />
-                </button>
-
                 {/* Config dropdown */}
                 <Menu as="div" className="relative ml-4">
                   <Menu.Button className="relative flex">
-                    <span className="sr-only">Open user menu</span>
                     <div className="text-2xl">
                       <ConfigIcon />
                     </div>
@@ -86,15 +72,11 @@ export default function Navbar() {
                     leaveTo="transform opacity-0 scale-95"
                   >
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      {memuItems.map(({ name, active, href }) => (
+                      {memuItems.map(({ name, href }) => (
                         <Menu.Item key={name}>
                           <a
                             href={href}
-                            className={classNames(
-                              active ? 'bg-gray-100' : '',
-                              'block px-4 py-2 text-sm text-gray-700'
-                            )}
-                          >
+                            className='block px-4 py-2 text-sm text-gray-700'>
                             {name}
                           </a>
                         </Menu.Item>
@@ -105,7 +87,6 @@ export default function Navbar() {
               </div>
             </div>
           </div>
-
           <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 px-2 pb-3 pt-2">
               {navigation.map((item) => (
@@ -114,12 +95,12 @@ export default function Navbar() {
                   as="a"
                   href={item.href}
                   className={classNames(
-                    item.current
+                    item.value === current
                       ? 'bg-gray-900 text-white'
                       : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                     'block rounded-md px-3 py-2 text-base font-medium'
                   )}
-                  aria-current={item.current ? 'page' : undefined}
+                  // aria-current={item.current ? 'page' : undefined}
                 >
                   {item.name}
                 </Disclosure.Button>
@@ -130,4 +111,6 @@ export default function Navbar() {
       )}
     </Disclosure>
   );
-}
+};
+
+export default Navbar;

@@ -1,5 +1,5 @@
 import { FC, useEffect, useState, useRef } from 'react';
-import Navbar from '../../components/organisms/Navbar';
+import Navbar, { PAGE_NAME } from '../../components/organisms/Navbar';
 import SearchablePaginatedTable from '../../components/organisms/SearchablePaginatedTable';
 import { addCustomer, getCustomers, updateCustomer } from '../../api/customer';
 import GeneralModal from '../../components/molecules/modal';
@@ -63,7 +63,6 @@ const CustomerPage: FC = () => {
   };
 
   const editCustomer = async (id: string, newData: any) => {
-    const originalCustomerData = response.data.find(({ _id }) => _id === id);
     const addressId = await editAddress(newData.address);
     if (Object.keys(newData).length === 0) {
       return;
@@ -133,14 +132,14 @@ const CustomerPage: FC = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar current={PAGE_NAME.CUSTOMER} />
       <Toast
         status="success"
         isDisplay={showToast}
         message={toastMessage}
         setDisplay={setShowToast}
       />
-      <div className="page-px mt-3">
+      <div className="page-px mt-3 block sm:absolute">
         <Button
           type={ButtonType.Default}
           text="Create"

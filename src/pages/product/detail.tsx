@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import { getProductById, updateProduct } from '../../api/product';
 import TagInput from '../../components/molecules/tag/TagInput';
 import Image from '../../components/atoms/image';
-import Navbar from '../../components/organisms/Navbar';
+import Navbar, { PAGE_NAME } from '../../components/organisms/Navbar';
 import { useParams } from 'react-router-dom';
 import Toast from '../../components/atoms/toast';
 
@@ -35,7 +35,7 @@ const ProductDetail: FC = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar current={PAGE_NAME.PRODUCT}/>
       <Toast
         status="success"
         isDisplay={showToast}
