@@ -9,7 +9,7 @@ type InputFieldProps = {
 const InputField: FC<InputFieldProps> = (props) => {
 
   return (
-    <label className='text-grey text-sm'>
+    <label className='text-gray-100 text-sm'>
       {props.inputProps.label} {props.inputProps.isRequired ? '*' : ''}
       <Input { ...props.inputProps }/>
       <p className='text-red-400 text-xs'>{props.error}</p>

@@ -142,6 +142,7 @@ const CustomerPage: FC = () => {
       <div className="page-px mt-3 block sm:absolute">
         <Button
           type={ButtonType.Default}
+          testClass='customerCreateBtn'
           text="Create"
           onClick={() => setOpenCreateModal(true)}
         />
@@ -162,7 +163,7 @@ const CustomerPage: FC = () => {
         title="Create Customer"
         testClass="createCustomerModal"
         isDisplay={openCreateModal}
-        body={<CustomerInputs isCreate setCustomer={setCustomer} />}
+        body={<CustomerInputs setCustomer={setCustomer} />}
         onClose={() => setOpenCreateModal(false)}
         onYes={{
           name: 'Create',

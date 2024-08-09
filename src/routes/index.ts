@@ -1,4 +1,5 @@
 import CustomerPage from '../pages/index';
+import IntroPage from '../pages/intro';
 import Login from '../pages/login';
 import LoginFailed from '../pages/login/loginFailed';
 import PageNotFound from '../pages/pageNotFound';
@@ -11,6 +12,12 @@ export const routers = [
     path: '/',
     element: CustomerPage,
     protectedRoute: true,
+  },
+  {
+    name: 'intro',
+    path: '/intro',
+    element: IntroPage,
+    protectedRoute: false,
   },
   {
     name: 'product',

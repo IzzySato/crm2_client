@@ -123,6 +123,7 @@ const ProductPage: FC = () => {
         <Button
           type={ButtonType.Default}
           text="Create"
+          testClass='productCreateBtn'
           onClick={() => setOpenCreateModal(true)}
         />
       </div>

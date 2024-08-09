@@ -33,8 +33,10 @@ const CustomerInputs: FC<Props> = ({
   useEffect(() => {
     // passing to parent
     const keys = ['firstName', 'lastName', 'email', 'phone'];
-    const customer = getUpdatedObject(keys, defaultValues, customerData );
-    setCustomer({ ...customer, address });
+    if (!isCreate) {
+      const customer = getUpdatedObject(keys, defaultValues, customerData );
+      setCustomer({ ...customer, address });
+    }
   }, [customerData, address]);
 
   return (
