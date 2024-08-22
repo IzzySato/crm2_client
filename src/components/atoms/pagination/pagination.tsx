@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { RootState, store } from '../../../store';
 import { setCustomerParams } from '../../../store/slices/pages/customerPageSlice';
 import { setProductParams } from '../../../store/slices/pages/productPageSlice';
-import CUSTOMER_PAGE from '../../../pages/index/constants';
+import CUSTOMER_PAGE from '../../../pages/customer/constants';
 import PRODUCT_PAGE from '../../../pages/product/constants';
 
 export type pagenationProps = {

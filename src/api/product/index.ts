@@ -1,33 +1,35 @@
-import API from '../index';
+import { api } from '../createApiInstance';
 import { uploadImage } from '../upload';
 import { PRODUCT_URL } from './constants';
 
 export const getProducts = async (params = {}) => {
-  return await API.get(PRODUCT_URL.BASE, { params });
+  return await api.get(PRODUCT_URL.BASE, { params });
 };
 
 export const addProduct = async (body: any) => {
-  const imageUrl = await uploadImage(body.file);
-  if (body.file) {
+  let imageUrl = '';
+  if (body.imageUrl === '' && body.file) {
+    imageUrl = await uploadImage(body.file);
     delete body.file;
   }
-  return await API.post(
+  return await api.post(
     PRODUCT_URL.BASE,
     imageUrl ? { ...body, imageUrl } : body
   );
 };
 
 export const updateProduct = async (id: string, body: any) => {
-  const imageUrl = await uploadImage(body.file);
-  if (body.file) {
+  let imageUrl = ''
+  if (!body.imageUrl && body.file) {
+    imageUrl = await uploadImage(body.file);
     delete body.file;
   }
-  return await API.put(
+  return await api.put(
     `${PRODUCT_URL.BASE}/${id}`,
     imageUrl ? { ...body, imageUrl } : body
   );
 };
 
 export const getProductById = async (id: string) => {
-  return await API.get(`${PRODUCT_URL.BASE}/${id}`);
+  return await api.get(`${PRODUCT_URL.BASE}/${id}`);
 };

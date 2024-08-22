@@ -1,4 +1,4 @@
-import CustomerPage from '../pages/index';
+import CustomerPage from '../pages/customer/index';
 import IntroPage from '../pages/intro';
 import Login from '../pages/login';
 import LoginFailed from '../pages/login/loginFailed';

@@ -1,18 +1,18 @@
-import API from '../index';
+import { api } from '../createApiInstance';
 import { CUSTOMER_URL } from './constants';
 
 export const getCustomers = async (params = {}) => {
-  return await API.get(CUSTOMER_URL.BASE, { params });
+  return await api.get(CUSTOMER_URL.BASE, { params });
 };
 
 export const getCustomerById = async (id: string) => {
-  return await API.get(`${CUSTOMER_URL.BASE}/${id}`);
+  return await api.get(`${CUSTOMER_URL.BASE}/${id}`);
 };
 
 export const addCustomer = async (body = {}) => {
-  return await API.post(CUSTOMER_URL.BASE, body);
+  return await api.post(CUSTOMER_URL.BASE, body);
 };
 
 export const updateCustomer = async (id: string, body = {}) => {
-  return await API.put(`${CUSTOMER_URL.BASE}/${id}`, body);
+  return await api.put(`${CUSTOMER_URL.BASE}/${id}`, body);
 };

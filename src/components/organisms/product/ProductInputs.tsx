@@ -3,6 +3,7 @@ import InputField from '../../molecules/inputField/InputField';
 import TagInput from '../../molecules/tag/TagInput';
 import FileInput from '../../atoms/input/FileInput';
 import { getUpdatedObject } from '../../../utils/update';
+import GenerateDescription from '../ai/generateDescription';
 
 type Props = {
   setProduct: (data: any) => void;
@@ -18,22 +19,22 @@ type Props = {
 
 const ProductInputs: FC<Props> = ({ setProduct, defaultValues }) => {
   const [productData, setProductData] = useState({
-    name: defaultValues?.name || '',
-    sku: defaultValues?.sku || '',
-    categoryTags: defaultValues?.categoryTags || [],
-    description: defaultValues?.description || '',
-    imageUrl: defaultValues?.imageUrl || '',
+    name: defaultValues?.name ?? '',
+    sku: defaultValues?.sku ?? '',
+    categoryTags: defaultValues?.categoryTags ?? [],
+    description: defaultValues?.description ?? '',
+    imageUrl: defaultValues?.imageUrl ?? '',
   });
   const [file, setFile] = useState(undefined);
 
   useEffect(() => {
     // passing to parent
     if (productData.name !== '' && productData.sku !== '') {
-      const keys = ['name', 'sku', 'categoryTags', 'description'];
+      const keys = ['name', 'sku', 'categoryTags', 'description', 'imageUrl'];
       const product = defaultValues
         ? getUpdatedObject(keys, defaultValues, productData)
         : productData;
-      if (file) {
+      if (productData.imageUrl === '' && file) {
         product.file = file;
       }
       setProduct(product);
@@ -70,33 +71,34 @@ const ProductInputs: FC<Props> = ({ setProduct, defaultValues }) => {
           }}
         />
       </div>
-      <div>
-        <InputField
-          inputProps={{
-            value: productData.description,
-            label: 'Description',
-            placeholder: 'Type the product description',
-            onChange: ({ target: { value } }) => {
-              setProductData({ ...productData, description: value });
-            },
-          }}
-        />
-      </div>
-      <div>
-        <TagInput
-          title="Category Tag"
-          assignedTags={productData.categoryTags}
-          onApply={(value) =>
-            setProductData({ ...productData, categoryTags: value })
-          }
-        />
-      </div>
-      <div>
-        <FileInput
-          title="Upload product image (optinal)"
-          onChange={({ target: { files } }) => setFile(files[0])}
-        />
-      </div>
+      <TagInput
+        title="Category Tag"
+        assignedTags={productData.categoryTags}
+        onApply={(value) =>
+          setProductData({ ...productData, categoryTags: value })
+        }
+      />
+      <FileInput
+        title="Upload product image (optinal)"
+        onChange={({ target: { files } }) => setFile(files[0])}
+      />
+      <GenerateDescription
+        file={file}
+        productName={productData.name}
+        setParentInputs={(imageUrl, description) =>
+          setProductData({ ...productData, description, imageUrl })
+        }
+      />
+      <InputField
+        inputProps={{
+          value: productData.description,
+          label: 'Description',
+          placeholder: 'Type the product description',
+          onChange: ({ target: { value } }) => {
+            setProductData({ ...productData, description: value });
+          },
+        }}
+      />
     </>
   );
 };

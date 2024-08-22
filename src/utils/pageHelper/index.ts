@@ -1,4 +1,4 @@
-import CUSTOMER_PAGE from '../../pages/index/constants';
+import CUSTOMER_PAGE from '../../pages/customer/constants';
 import PRODUCT_PAGE from '../../pages/product/constants';
 
 export const getPageInfo = (pageName: string) => {

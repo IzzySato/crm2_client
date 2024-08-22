@@ -1,7 +1,7 @@
-import API from '../index';
+import { api } from '../createApiInstance';
 import { USER_URL } from './constants';
 
 export const addUser = async (body = {}) => {
-  return await API.post(USER_URL.BASE, body);
+  return await api.post(USER_URL.BASE, body);
 };
 

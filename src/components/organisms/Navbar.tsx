@@ -26,7 +26,7 @@ const Navbar: FC<Props> = ({ current }) => {
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+          <div className="mx-auto px-2 sm:px-6 lg:px-8">
             <div className="relative flex items-center justify-between">
               <div className="flex items-center sm:hidden">
                 {/* Mobile menu button*/}

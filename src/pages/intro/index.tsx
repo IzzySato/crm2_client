@@ -3,12 +3,18 @@ import Image from '../../components/atoms/image';
 import { Link } from 'react-router-dom';
 import CustomerPageIntro from '../../components/organisms/intro/customerPgae';
 import ProductPageIntro from '../../components/organisms/intro/productPage';
+import AiIntro from '../../components/organisms/intro/ai';
 
 const techList = [
   {
     id: 'backend',
     label: 'Backend:',
     value: 'Node.js, MongoDB, Redis',
+  },
+  {
+    id: 'AI_backend',
+    label: 'AI Backend:',
+    value: 'Python, Flask',
   },
   {
     id: 'frontend',
@@ -124,20 +130,20 @@ const IntroPage: FC = () => {
           ))}
         </ul>
       </div>
-      <div>
-        <CustomerPageIntro />
-      </div>
-      <div>
-        <ProductPageIntro />
-      </div>
+      <CustomerPageIntro />
+      <ProductPageIntro />
+      <AiIntro />
       <div className="mt-10 mb-10">
         <h2 className="mb-5 text-3xl">GitHub Repositories:</h2>
         <ul>
           <li className='text-blue-500 mb-5'>
             <Link to="https://github.com/IzzySato/crm2_server">Backend</Link>
           </li>
-          <li className='text-blue-500'>
+          <li className='text-blue-500 mb-5'>
             <Link to="https://github.com/IzzySato/crm2_client">Frontend</Link>
+          </li>
+          <li className='text-blue-500'>
+            <Link to="https://github.com/IzzySato/crm_ai">AI Backend</Link>
           </li>
         </ul>
       </div>

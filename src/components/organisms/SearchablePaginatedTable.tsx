@@ -5,7 +5,7 @@ import SearchHeader from './SearchHeader';
 import { getPageInfo } from '../../utils/pageHelper';
 import NoTableData from './NoTableData';
 import TableAction from '../molecules/tableAction';
-import CUSTOMER_PAGE from '../../pages/index/constants';
+import CUSTOMER_PAGE from '../../pages/customer/constants';
 import PRODUCT_PAGE from '../../pages/product/constants';
 import CustomerInputs from './customer/CustomerInputs';
 import ProductInputs from './product/ProductInputs';
