@@ -91,7 +91,7 @@ const IntroPage: FC = () => {
           ensure reliability, security, and efficiency.
         </p>
       </div>
-      <div className="flex justify-between">
+      <div className="lg:flex justify-between">
         <div>
           <h2 className="mb-5 text-3xl">Technologies:</h2>
           <ul>
