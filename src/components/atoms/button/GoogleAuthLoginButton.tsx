@@ -2,7 +2,6 @@ import { FC } from 'react';
 import GoogleIcon from '../icon/GoogleIcon';
 
 const GoogleAuthLoginButton: FC = () => {
-  console.log(process.env.REACT_APP_API_URL)
   return (
     <div className="px-6 sm:px-0 max-w-sm">
       <a
