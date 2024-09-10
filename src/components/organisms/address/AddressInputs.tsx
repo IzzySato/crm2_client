@@ -17,7 +17,7 @@ const AddressInputs: FC<InputFieldProps> = ({
   setAddress,
 }) => {
   const [addressData, setAddressData] = useState({
-    _id: '',
+    id: '',
     line1: '',
     line2: '',
     city: '',
@@ -26,7 +26,7 @@ const AddressInputs: FC<InputFieldProps> = ({
   });
 
   const [oldAddressData, setOldAddressData] = useState({
-    _id: '',
+    id: '',
     line1: '',
     line2: '',
     city: '',
@@ -49,7 +49,7 @@ const AddressInputs: FC<InputFieldProps> = ({
         if (data) {
           setOldAddressData({ ...data });
           setAddressData({
-            _id: data._id,
+            id: data.id,
             line1: data.line1,
             line2: data.line2,
             city: data.city,

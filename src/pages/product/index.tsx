@@ -33,9 +33,9 @@ const ProductPage: FC = () => {
   });
 
   const formatProductData = (data: any) => {
-    const link = (_id: string) => (
-      <Link key={_id} to={`/product/${_id}`}>
-        {_id}
+    const link = (id: string) => (
+      <Link key={id} to={`/product/${id}`}>
+        {id}
       </Link>
     );
     const categoryTags = (tags: any) =>
@@ -43,12 +43,12 @@ const ProductPage: FC = () => {
     return Array.isArray(data)
       ? data?.map((p: any) => ({
           ...p,
-          _id: link(p._id),
+          id: link(p.id),
           categoryTags: categoryTags(p.categoryTags),
         }))
       : {
           ...data,
-          _id: link(data._id),
+          id: link(data.id),
           categoryTags: categoryTags(data.categoryTags),
         };
   };
@@ -75,7 +75,7 @@ const ProductPage: FC = () => {
     const { data } = await updateProduct(id, newData);
     setToastMessage('Product Updated');
     const updated = productResponse.data.map((p) =>
-      p._id.key === id ? formatProductData(data) : p
+      p.id.key === id ? formatProductData(data) : p
     );
     setProductResponse({
       ...productResponse,
@@ -83,8 +83,8 @@ const ProductPage: FC = () => {
     });
   };
 
-  const loadProductData = async () => {
-    const { data } = await getProducts(params);
+  const loadProductData = async (newParams = params) => {
+    const { data } = await getProducts(newParams);
     if (data.data.length > 0) {
       const addedActionData = formatProductData(data.data);
       setProductResponse({ ...data, data: addedActionData });
@@ -112,7 +112,7 @@ const ProductPage: FC = () => {
 
   return (
     <>
-      <Navbar current={PAGE_NAME.PRODUCT}/>
+      <Navbar current={PAGE_NAME.PRODUCT} />
       <Toast
         status="success"
         isDisplay={showToast}
@@ -123,20 +123,21 @@ const ProductPage: FC = () => {
         <Button
           type={ButtonType.Default}
           text="Create"
-          testClass='productCreateBtn'
+          testClass="productCreateBtn"
           onClick={() => setOpenCreateModal(true)}
         />
       </div>
       <SearchablePaginatedTable
         pageName={PRODUCT_PAGE.PAGE_NAME.VALUE}
         onSearch={async (value) => {
-          store.dispatch(setProductParams({ ...params, searchBy: value }));
-          await loadProductData();
+          const newParams = { ...params, searchBy: value };
+          store.dispatch(setProductParams(newParams));
+          await loadProductData(newParams);
         }}
         response={productResponse}
         setPageLoadClicked={setPageLoadClicked}
         onDelete={async (id) => await deleteProduct(id.key)}
-        onUpdate={async (id, data) => await editProduct(id.key, data)}
+        onUpdate={async (id, data) => await editProduct(id, data)}
       />
       {/* Create Modal */}
       <GeneralModal

@@ -63,7 +63,7 @@ const Button: FC<ButtonProps> = ({
     <button
       onClick={isDisabled ? () => {} : onClick}
       type="button"
-      className={getClasses()}
+      className={`${isDisabled ? styles.disabled : getClasses()}`}
     >
       {loading === true ? <LoadingIcon /> : <p>{text}</p>}
       {icon && <div className="text-xl pl-3">{icon}</div>}

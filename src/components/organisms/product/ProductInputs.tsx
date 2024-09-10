@@ -8,7 +8,7 @@ import GenerateDescription from '../ai/generateDescription';
 type Props = {
   setProduct: (data: any) => void;
   defaultValues?: {
-    _id: string;
+    id: string;
     name: string;
     sku: string;
     categoryTags: string[];

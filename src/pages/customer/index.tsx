@@ -26,31 +26,36 @@ const CustomerPage: FC = () => {
   const [showToast, setShowToast] = useState(false);
   const [pageLoadClicked, setPageLoadClicked] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const [isValid, setIsValid] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [customer, setCustomer] = useState({
-    _id: '',
+    id: '',
     firstName: '',
     lastName: '',
+    phone: '',
     email: '',
-    address: {},
+    addresses: [],
   });
 
-  const isValid = (data: any) => {
-    return (
-      data.firstName !== '' &&
-      data.lastName !== '' &&
-      data.email !== '' &&
-      validateEmail(data.email) !== null
+  useEffect(() => {
+    setIsValid(
+      customer.firstName !== '' &&
+        customer.lastName !== '' &&
+        customer.email !== '' &&
+        customer.phone !== '' &&
+        validateEmail(customer.email) !== null
     );
-  };
+  }, [customer]);
 
   const createCustomer = async () => {
-    const addressIds: Array<string> = [];
-    if (customer.address) {
-      const { data } = await addAddress(customer.address);
-      addressIds.push(data[0]._id);
+    const addresses: Array<string> = [];
+    if (customer.addresses) {
+      const { data } = await addAddress(customer.addresses);
+      addresses.push(data[0].id);
     }
-    const { data } = await addCustomer({ ...customer, addressIds });
+    const {
+      data: { data },
+    } = await addCustomer({ ...customer, addresses });
     const newCustomerData = [...response.data, data[0]];
     setResponse({
       ...response,
@@ -62,36 +67,13 @@ const CustomerPage: FC = () => {
     setShowToast(true);
   };
 
-  const editCustomer = async (id: string, newData: any) => {
-    const addressId = await editAddress(newData.address);
-    if (Object.keys(newData).length === 0) {
-      return;
-    }
-    if (addressId) {
-      newData.addressIds = [addressId];
-    }
-    delete newData.address;
-    await updateCustomer(id, newData);
-    setToastMessage('Customer Updated');
-    const updatedData = response.data.map((c) =>
-      c._id === id
-        ? {
-            _id: id,
-            ...newData,
-            addresses: newData.addressIds || c.addresses,
-          }
-        : c
-    );
-    setResponse({ ...response, data: updatedData });
-  };
-
   const editAddress = async (newAddressData: any) => {
-    if (Object.keys(newAddressData).length === 0) {
+    if (!newAddressData) {
       return null;
     }
-    if (newAddressData._id) {
-      const id = newAddressData._id;
-      delete newAddressData._id;
+    if (newAddressData.id) {
+      const id = newAddressData.id;
+      delete newAddressData.id;
       // Update the address
       await updateAddress(id, newAddressData);
       setToastMessage('Address Updated');
@@ -99,15 +81,40 @@ const CustomerPage: FC = () => {
       return null;
     } else {
       // add a new address and return address id
-      const { data } = await addAddress(newAddressData);
+      const {
+        data: { data },
+      } = await addAddress(newAddressData);
       setToastMessage('Address Created');
       setShowToast(true);
-      return data[0]._id;
+      return data[0].id;
     }
   };
 
-  const loadCustomerData = async () => {
-    const { data } = await getCustomers(params);
+  const editCustomer = async (id: string, newData: any) => {
+    const addresses = await editAddress(newData.address);
+    if (Object.keys(newData).length === 0) {
+      return;
+    }
+    if (addresses) {
+      newData.addresses = [addresses];
+    }
+    await updateCustomer(id, newData);
+    setToastMessage('Customer Updated');
+    const updatedData = response.data.map((c) =>
+      c.id === id
+        ? {
+            id,
+            ...c,
+            ...newData,
+            addresses: newData.addresses ?? c.addresses,
+          }
+        : c
+    );
+    setResponse({ ...response, data: updatedData });
+  };
+
+  const loadCustomerData = async (newParam = params) => {
+    const { data } = await getCustomers(newParam);
     setResponse(data);
     setPageLoadClicked(false);
   };
@@ -142,7 +149,7 @@ const CustomerPage: FC = () => {
       <div className="page-px mt-3 block sm:absolute">
         <Button
           type={ButtonType.Default}
-          testClass='customerCreateBtn'
+          testClass="customerCreateBtn"
           text="Create"
           onClick={() => setOpenCreateModal(true)}
         />
@@ -150,8 +157,9 @@ const CustomerPage: FC = () => {
       <SearchablePaginatedTable
         pageName={CUSTOMER_PAGE.PAGE_NAME.VALUE}
         onSearch={async (value) => {
-          store.dispatch(setCustomerParams({ ...params, searchBy: value }));
-          await loadCustomerData();
+          const newParam = { ...params, searchBy: value };
+          store.dispatch(setCustomerParams(newParam));
+          await loadCustomerData(newParam);
         }}
         response={response}
         setPageLoadClicked={setPageLoadClicked}
@@ -167,7 +175,7 @@ const CustomerPage: FC = () => {
         onClose={() => setOpenCreateModal(false)}
         onYes={{
           name: 'Create',
-          isDisabled: !isValid(customer),
+          isDisabled: !isValid,
           action: async () => await createCustomer(),
         }}
         onNo={{ name: 'Cancel', action: () => setOpenCreateModal(false) }}

@@ -20,7 +20,7 @@ class CrmPage {
 
   async get(path) {
     try {
-      const res = await fetch(`${process.env.API_URL}/${path}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}${path}`, {
         method: 'GET',
         headers: {
           Accept: 'application/json',
@@ -35,7 +35,7 @@ class CrmPage {
 
   async post(path, body) {
     try {
-      const res = await fetch(`${process.env.API_URL}/${path}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}${path}`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -50,17 +50,18 @@ class CrmPage {
   }
 
   async login() {
-    const result = await this.post('user', {
+    const body = {
       firstName: 'test',
       lastName: 'smith',
       companyId: '51e0373c6f35bd826f47e9a1',
       email: 'test.smith@mail.com',
       authProviderId: '',
       permissions: ['owner'],
-    });
-    this.id = result[0]._id;
+    }
+    const { data } = await this.post('user', body);
+    this.id = data[0].id;
     const token = jwt.sign(
-      { id: result[0]._id },
+      { id: data[0].id },
       process.env.JWT_TOKEN_SECRET,
       { expiresIn: '1h' }
     );
@@ -75,7 +76,7 @@ class CrmPage {
   }
 
   async logout() {
-    await fetch(`${process.env.API_URL}/user/${this.id}`, {
+    await fetch(`${process.env.REACT_APP_API_URL}user/${this.id}`, {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',

@@ -5,7 +5,7 @@ const initialState = {
     pageNum: 1,
     length: 10,
     fields: 'firstName lastName email phone _id addresses',
-    sortBy: '_id',
+    sortBy: 'id',
     searchBy: '',
   }
 };

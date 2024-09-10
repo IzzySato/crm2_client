@@ -37,7 +37,7 @@ const SearchablePaginatedTable: FC<Props> = ({
     if (isUpdateClicked) {
       onUpdate(updateId, updateData);
       setIsUpdateClicked(false);
-      setUpdateId('')
+      setUpdateId('');
     }
   }, [isUpdateClicked]);
 
@@ -52,10 +52,11 @@ const SearchablePaginatedTable: FC<Props> = ({
           />
         );
       case PRODUCT_PAGE.PAGE_NAME.VALUE:
+        const categoryTags = defaultValues.categoryTags.map(({ key }: any) => key);
         return (
           <ProductInputs
             setProduct={setUpdateData}
-            defaultValues={defaultValues}
+            defaultValues={{ ...defaultValues, categoryTags }}
           />
         );
     }
@@ -72,21 +73,22 @@ const SearchablePaginatedTable: FC<Props> = ({
       values.forEach(
         (key) => (newObj = Object.assign(newObj, { [key]: d[key] }))
       );
+      // if the id cell is clickable d.id is element, otherwise string id
+      const id:any = d['id'].key? d['id'].key : d.id;
       return {
         ...newObj,
         actions: (
           <TableAction
-            id={d._id}
             updateBody={getUpdateInputBody(d)}
             actions={{
               delete: {
-                message: PAGE.ACTIONS.DELETE.MESSAGE,
-                action: () => onDelete(d._id)
+                message: PAGE.ACTIONS.DELETE.MESSAGE.replace('{ID}', id),
+                action: () => onDelete(d.id),
               },
               update: {
                 isValidInput: false,
                 action: () => {
-                  setUpdateId(d._id);
+                  setUpdateId(id);
                   setIsUpdateClicked(true);
                 },
               },

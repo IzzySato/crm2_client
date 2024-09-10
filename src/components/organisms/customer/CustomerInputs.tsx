@@ -22,10 +22,10 @@ const CustomerInputs: FC<Props> = ({
   setCustomer,
 }) => {
   const [customerData, setCustomerData] = useState({
-    firstName: defaultValues?.firstName || '',
-    lastName: defaultValues?.lastName || '',
-    email: defaultValues?.email || '',
-    phone: defaultValues?.phone || '',
+    firstName: defaultValues?.firstName ?? '',
+    lastName: defaultValues?.lastName ?? '',
+    email: defaultValues?.email ?? '',
+    phone: defaultValues?.phone ?? '',
   });
 
   const [address, setAddress] = useState({});
@@ -33,10 +33,11 @@ const CustomerInputs: FC<Props> = ({
   useEffect(() => {
     // passing to parent
     const keys = ['firstName', 'lastName', 'email', 'phone'];
-    if (!isCreate) {
-      const customer = getUpdatedObject(keys, defaultValues, customerData );
-      setCustomer({ ...customer, address });
+    const customer = !isCreate ? getUpdatedObject(keys, defaultValues, customerData ) : customerData;
+    if (Object.keys(address).length > 0) {
+      customer.address = address;
     }
+    setCustomer(customer);
   }, [customerData, address]);
 
   return (

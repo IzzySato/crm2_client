@@ -6,7 +6,7 @@ const PAGE = {
   TABLE_COLUMNS: [
     {
       name: 'ID',
-      value: '_id',
+      value: 'id',
       customClass: 'hidden lg:table-cell',
     },
     {
@@ -50,7 +50,7 @@ const PAGE = {
       },
     },
     DELETE: {
-      MESSAGE: 'Delete Customer Id:'
+      MESSAGE: 'Delete Customer Id: {ID}'
     }
   }
 }

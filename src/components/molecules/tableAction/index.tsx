@@ -5,7 +5,6 @@ import Modal from '../modal';
 
 type Props = {
   updateBody: any;
-  id: string;
   actions: {
     delete: {
       message: string;
@@ -18,7 +17,7 @@ type Props = {
   };
 };
 
-const TableAction: FC<Props> = ({ updateBody, actions, id }) => {
+const TableAction: FC<Props> = ({ updateBody, actions }) => {
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
 
